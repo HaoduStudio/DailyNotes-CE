@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -6,15 +6,15 @@ import android.os.Handler
 import android.os.Message
 import android.view.MotionEvent
 import com.bumptech.glide.Glide
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.R
-import com.haoduyoudu.DailyAccounts.databinding.ActivityGuideBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.model.models.GuideImgList
-import com.haoduyoudu.DailyAccounts.utils.NetworkUtils
-import com.haoduyoudu.DailyAccounts.view.activities.base.BaseActivity
-import com.haoduyoudu.DailyAccounts.view.adapters.BannerAdapter
-import com.haoduyoudu.DailyAccounts.viewModel.repositories.NetworkRepository
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.R
+import com.haodustudio.DailyNotes.databinding.ActivityGuideBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.model.models.GuideImgList
+import com.haodustudio.DailyNotes.utils.NetworkUtils
+import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
+import com.haodustudio.DailyNotes.view.adapters.BannerAdapter
+import com.haodustudio.DailyNotes.viewModel.repositories.NetworkRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

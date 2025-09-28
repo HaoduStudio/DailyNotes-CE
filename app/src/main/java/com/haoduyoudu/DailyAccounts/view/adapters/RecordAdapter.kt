@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.adapters
+package com.haodustudio.DailyNotes.view.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.haoduyoudu.DailyAccounts.R
+import com.haodustudio.DailyNotes.R
 
 class RecordAdapter (private val activity: AppCompatActivity, private val RecordList: List<RecordItem>) :
         RecyclerView.Adapter<RecordAdapter.ViewHolder>() {

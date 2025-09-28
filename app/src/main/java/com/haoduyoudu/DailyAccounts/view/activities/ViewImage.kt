@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -20,11 +20,11 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-import com.haoduyoudu.DailyAccounts.R
-import com.haoduyoudu.DailyAccounts.databinding.ActivityViewImageBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.utils.BitmapUtils
-import com.haoduyoudu.DailyAccounts.view.activities.base.BaseActivity
+import com.haodustudio.DailyNotes.R
+import com.haodustudio.DailyNotes.databinding.ActivityViewImageBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.utils.BitmapUtils
+import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
 import com.xtc.shareapi.share.utils.BitmapUtil.getScreenWidth
 
 

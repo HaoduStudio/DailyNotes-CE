@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.utils
+package com.haodustudio.DailyNotes.utils
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

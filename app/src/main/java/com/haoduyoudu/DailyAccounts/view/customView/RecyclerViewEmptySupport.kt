@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.customView
+package com.haodustudio.DailyNotes.view.customView
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.haoduyoudu.DailyAccounts.R
+import com.haodustudio.DailyNotes.R
 
 
 class RecyclerViewEmptySupport : RecyclerView {

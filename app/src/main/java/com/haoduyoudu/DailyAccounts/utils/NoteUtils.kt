@@ -1,16 +1,16 @@
-package com.haoduyoudu.DailyAccounts.utils
+package com.haodustudio.DailyNotes.utils
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import com.google.gson.Gson
-import com.haoduyoudu.DailyAccounts.BaseApplication.Companion.ASSETS_MOOD_PATH
-import com.haoduyoudu.DailyAccounts.BaseApplication.Companion.OLD_DATA_PATH
-import com.haoduyoudu.DailyAccounts.helper.toGson
-import com.haoduyoudu.DailyAccounts.model.models.Note
-import com.haoduyoudu.DailyAccounts.view.customView.sticker.Sticker
-import com.haoduyoudu.DailyAccounts.view.customView.sticker.StickerLayout
-import com.haoduyoudu.DailyAccounts.view.customView.sticker.StickerSaveModel
+import com.haodustudio.DailyNotes.BaseApplication.Companion.ASSETS_MOOD_PATH
+import com.haodustudio.DailyNotes.BaseApplication.Companion.OLD_DATA_PATH
+import com.haodustudio.DailyNotes.helper.toGson
+import com.haodustudio.DailyNotes.model.models.Note
+import com.haodustudio.DailyNotes.view.customView.sticker.Sticker
+import com.haodustudio.DailyNotes.view.customView.sticker.StickerLayout
+import com.haodustudio.DailyNotes.view.customView.sticker.StickerSaveModel
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*

@@ -1,9 +1,9 @@
-package com.haoduyoudu.DailyAccounts.utils
+package com.haodustudio.DailyNotes.utils
 
 import android.app.Service
 import android.content.Context
 import android.media.AudioManager
-import com.haoduyoudu.DailyAccounts.BaseApplication.Companion.context
+import com.haodustudio.DailyNotes.BaseApplication.Companion.context
 
 
 /**

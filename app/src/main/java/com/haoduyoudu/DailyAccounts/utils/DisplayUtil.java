@@ -1,6 +1,6 @@
-package com.haoduyoudu.DailyAccounts.utils;
+package com.haodustudio.DailyNotes.utils;
 
-import com.haoduyoudu.DailyAccounts.BaseApplication;
+import com.haodustudio.DailyNotes.BaseApplication;
 
 public class DisplayUtil {
     /**

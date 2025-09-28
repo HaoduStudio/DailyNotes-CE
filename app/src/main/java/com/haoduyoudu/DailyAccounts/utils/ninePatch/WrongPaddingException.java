@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.utils.ninePatch;
+package com.haodustudio.DailyNotes.utils.ninePatch;
 
 /**
  * Created by Anatolii on 8/28/13.

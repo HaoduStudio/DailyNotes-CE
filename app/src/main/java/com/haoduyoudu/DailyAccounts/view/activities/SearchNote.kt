@@ -1,13 +1,13 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.databinding.ActivitySearchNoteBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.view.activities.base.BaseActivity
-import com.haoduyoudu.DailyAccounts.viewModel.viewModels.GlobalViewModel
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.databinding.ActivitySearchNoteBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
+import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 
 class SearchNote : BaseActivity() {
     private val binding by lazy { ActivitySearchNoteBinding.inflate(layoutInflater) }

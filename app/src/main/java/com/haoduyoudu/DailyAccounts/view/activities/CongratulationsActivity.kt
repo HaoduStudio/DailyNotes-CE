@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -10,13 +10,13 @@ import android.os.Handler
 import android.os.Message
 import android.util.Log
 import com.bumptech.glide.Glide
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.R
-import com.haoduyoudu.DailyAccounts.databinding.ActivityCongratulationsBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.utils.NetworkUtils
-import com.haoduyoudu.DailyAccounts.utils.PlayMediaUtils
-import com.haoduyoudu.DailyAccounts.view.activities.base.BaseActivity
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.R
+import com.haodustudio.DailyNotes.databinding.ActivityCongratulationsBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.utils.NetworkUtils
+import com.haodustudio.DailyNotes.utils.PlayMediaUtils
+import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
 
 class CongratulationsActivity : BaseActivity() {
     private val binding by lazy { ActivityCongratulationsBinding.inflate(layoutInflater) }

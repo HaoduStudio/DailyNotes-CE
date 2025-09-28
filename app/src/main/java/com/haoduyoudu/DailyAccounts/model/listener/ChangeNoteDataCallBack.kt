@@ -1,6 +1,6 @@
-package com.haoduyoudu.DailyAccounts.model.listener
+package com.haodustudio.DailyNotes.model.listener
 
-import com.haoduyoudu.DailyAccounts.model.models.Note
+import com.haodustudio.DailyNotes.model.models.Note
 
 interface ChangeNoteDataCallBack {
     fun doChange(it: Note)

@@ -1,17 +1,17 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.databinding.ActivityNoteOptionBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.model.database.NOTE_TYPE_V1
-import com.haoduyoudu.DailyAccounts.model.database.NOTE_TYPE_V2
-import com.haoduyoudu.DailyAccounts.model.listener.DeleteNoteCallBack
-import com.haoduyoudu.DailyAccounts.view.activities.base.BaseActivity
-import com.haoduyoudu.DailyAccounts.view.activities.base.DialogActivity
-import com.haoduyoudu.DailyAccounts.viewModel.viewModels.GlobalViewModel
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.databinding.ActivityNoteOptionBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.model.database.NOTE_TYPE_V1
+import com.haodustudio.DailyNotes.model.database.NOTE_TYPE_V2
+import com.haodustudio.DailyNotes.model.listener.DeleteNoteCallBack
+import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
+import com.haodustudio.DailyNotes.view.activities.base.DialogActivity
+import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 import kotlin.concurrent.thread
 
 class NoteOption : DialogActivity(noShot = true) {

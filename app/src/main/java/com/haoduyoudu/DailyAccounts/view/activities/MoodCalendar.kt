@@ -1,20 +1,20 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.databinding.ActivityMoodCalendarBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.model.database.NOTE_TYPE_V1
-import com.haoduyoudu.DailyAccounts.model.database.NOTE_TYPE_V2
-import com.haoduyoudu.DailyAccounts.model.models.Note
-import com.haoduyoudu.DailyAccounts.utils.DateUtils
-import com.haoduyoudu.DailyAccounts.view.activities.base.BaseActivity
-import com.haoduyoudu.DailyAccounts.view.adapters.MoodCalendarAdapter
-import com.haoduyoudu.DailyAccounts.viewModel.viewModels.GlobalViewModel
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.databinding.ActivityMoodCalendarBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.model.database.NOTE_TYPE_V1
+import com.haodustudio.DailyNotes.model.database.NOTE_TYPE_V2
+import com.haodustudio.DailyNotes.model.models.Note
+import com.haodustudio.DailyNotes.utils.DateUtils
+import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
+import com.haodustudio.DailyNotes.view.adapters.MoodCalendarAdapter
+import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 
 class MoodCalendar : BaseActivity() {
 

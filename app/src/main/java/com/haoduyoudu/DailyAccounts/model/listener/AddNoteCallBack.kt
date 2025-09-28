@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.model.listener
+package com.haodustudio.DailyNotes.model.listener
 
 interface AddNoteCallBack {
     fun onSuccessful(id: Long)

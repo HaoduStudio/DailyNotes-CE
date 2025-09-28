@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.model.database
+package com.haodustudio.DailyNotes.model.database
 
 // Note Types
 const val NOTE_TYPE_V1 = 0

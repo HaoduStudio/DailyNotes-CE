@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.customView.freeLayout
+package com.haodustudio.DailyNotes.view.customView.freeLayout
 
 import android.content.Context
 import android.graphics.Canvas
@@ -9,9 +9,9 @@ import android.util.Log
 import android.view.Display
 import android.view.MotionEvent
 import android.view.View
-import com.haoduyoudu.DailyAccounts.utils.DisplayUtil
-import com.haoduyoudu.DailyAccounts.view.customView.freeLayout.objects.FreeObject
-import com.haoduyoudu.DailyAccounts.view.customView.sticker.StickerScrollView
+import com.haodustudio.DailyNotes.utils.DisplayUtil
+import com.haodustudio.DailyNotes.view.customView.freeLayout.objects.FreeObject
+import com.haodustudio.DailyNotes.view.customView.sticker.StickerScrollView
 import kotlin.math.ceil
 
 class FreeLayout : View, View.OnTouchListener {

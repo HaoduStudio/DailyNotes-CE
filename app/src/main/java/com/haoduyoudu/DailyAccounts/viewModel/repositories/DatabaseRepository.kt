@@ -1,7 +1,7 @@
-package com.haoduyoudu.DailyAccounts.viewModel.repositories
+package com.haodustudio.DailyNotes.viewModel.repositories
 
-import com.haoduyoudu.DailyAccounts.model.database.AppDatabase
-import com.haoduyoudu.DailyAccounts.model.models.Note
+import com.haodustudio.DailyNotes.model.database.AppDatabase
+import com.haodustudio.DailyNotes.model.models.Note
 
 object DatabaseRepository {
     private const val tag = "Repository"

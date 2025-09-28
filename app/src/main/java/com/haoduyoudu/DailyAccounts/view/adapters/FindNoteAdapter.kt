@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.adapters
+package com.haodustudio.DailyNotes.view.adapters
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -14,11 +14,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.haoduyoudu.DailyAccounts.BaseApplication.Companion.ASSETS_MOOD_PATH
-import com.haoduyoudu.DailyAccounts.R
-import com.haoduyoudu.DailyAccounts.model.models.Note
-import com.haoduyoudu.DailyAccounts.utils.DateUtils
-import com.haoduyoudu.DailyAccounts.utils.ViewUtils
+import com.haodustudio.DailyNotes.BaseApplication.Companion.ASSETS_MOOD_PATH
+import com.haodustudio.DailyNotes.R
+import com.haodustudio.DailyNotes.model.models.Note
+import com.haodustudio.DailyNotes.utils.DateUtils
+import com.haodustudio.DailyNotes.utils.ViewUtils
 import java.util.*
 import kotlin.collections.ArrayList
 

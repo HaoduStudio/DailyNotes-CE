@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.model.models
+package com.haodustudio.DailyNotes.model.models
 
 import android.util.Log
 import com.google.gson.annotations.Expose

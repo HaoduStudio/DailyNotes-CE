@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -13,13 +13,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.R
-import com.haoduyoudu.DailyAccounts.databinding.ActivityAboutSoftwareBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.utils.ViewUtils
-import com.haoduyoudu.DailyAccounts.view.activities.base.BaseActivity
-import com.haoduyoudu.DailyAccounts.viewModel.viewModels.GlobalViewModel
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.R
+import com.haodustudio.DailyNotes.databinding.ActivityAboutSoftwareBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.utils.ViewUtils
+import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
+import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 
 
 class AboutSoftware : BaseActivity() {

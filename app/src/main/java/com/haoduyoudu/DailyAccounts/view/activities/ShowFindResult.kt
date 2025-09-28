@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -8,17 +8,17 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.R
-import com.haoduyoudu.DailyAccounts.databinding.ActivityShowFindResultBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.model.database.NOTE_TYPE_V1
-import com.haoduyoudu.DailyAccounts.model.models.Note
-import com.haoduyoudu.DailyAccounts.utils.DateUtils
-import com.haoduyoudu.DailyAccounts.utils.ViewUtils
-import com.haoduyoudu.DailyAccounts.view.activities.base.BaseActivity
-import com.haoduyoudu.DailyAccounts.view.adapters.FindNoteAdapter
-import com.haoduyoudu.DailyAccounts.viewModel.viewModels.GlobalViewModel
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.R
+import com.haodustudio.DailyNotes.databinding.ActivityShowFindResultBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.model.database.NOTE_TYPE_V1
+import com.haodustudio.DailyNotes.model.models.Note
+import com.haodustudio.DailyNotes.utils.DateUtils
+import com.haodustudio.DailyNotes.utils.ViewUtils
+import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
+import com.haodustudio.DailyNotes.view.adapters.FindNoteAdapter
+import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 import kotlin.concurrent.thread
 
 class ShowFindResult : BaseActivity() {

@@ -1,8 +1,8 @@
-package com.haoduyoudu.DailyAccounts.utils
+package com.haodustudio.DailyNotes.utils
 
 import android.os.Handler
 import android.os.Message
-import com.haoduyoudu.DailyAccounts.BaseApplication
+import com.haodustudio.DailyNotes.BaseApplication
 
 object NetworkUtils {
     fun isNetworkOnline(myHandler: Handler) {

@@ -1,8 +1,8 @@
-package com.haoduyoudu.DailyAccounts.model.database.daos
+package com.haodustudio.DailyNotes.model.database.daos
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.haoduyoudu.DailyAccounts.model.models.Note
+import com.haodustudio.DailyNotes.model.models.Note
 
 @Dao
 interface NoteDao {

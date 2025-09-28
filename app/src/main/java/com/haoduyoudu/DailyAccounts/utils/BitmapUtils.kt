@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.utils
+package com.haodustudio.DailyNotes.utils
 
 import android.app.Activity
 import android.content.res.AssetManager
@@ -11,8 +11,8 @@ import android.renderscript.ScriptIntrinsicBlur
 import android.util.Base64
 import android.util.Log
 import android.view.View
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.BaseApplication.Companion.context
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.BaseApplication.Companion.context
 import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 import java.io.InputStream

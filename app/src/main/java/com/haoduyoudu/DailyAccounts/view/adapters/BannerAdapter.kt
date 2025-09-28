@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.adapters
+package com.haodustudio.DailyNotes.view.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.haoduyoudu.DailyAccounts.R
+import com.haodustudio.DailyNotes.R
 
 class BannerAdapter (private val activity: AppCompatActivity, private val ImgList: List<String>) :
     RecyclerView.Adapter<BannerAdapter.ViewHolder>() {

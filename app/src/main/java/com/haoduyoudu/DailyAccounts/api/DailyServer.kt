@@ -1,6 +1,6 @@
-package com.haoduyoudu.DailyAccounts.api
+package com.haodustudio.DailyNotes.api
 
-import com.haoduyoudu.DailyAccounts.model.models.*
+import com.haodustudio.DailyNotes.model.models.*
 import retrofit2.Call
 import retrofit2.http.GET
 

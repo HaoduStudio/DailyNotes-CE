@@ -1,8 +1,8 @@
-package com.haoduyoudu.DailyAccounts.utils
+package com.haodustudio.DailyNotes.utils
 
 import android.graphics.Bitmap
 import android.util.Log
-import com.haoduyoudu.DailyAccounts.BaseApplication
+import com.haodustudio.DailyNotes.BaseApplication
 import java.io.*
 
 object FileUtils {

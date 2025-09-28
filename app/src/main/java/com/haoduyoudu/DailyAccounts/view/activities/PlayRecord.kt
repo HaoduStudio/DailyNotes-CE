@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -13,12 +13,12 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.gif.GifDrawable
-import com.haoduyoudu.DailyAccounts.R
-import com.haoduyoudu.DailyAccounts.databinding.ActivityPlayRecordBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.utils.PlayMediaUtils
-import com.haoduyoudu.DailyAccounts.utils.VolumeUtil
-import com.haoduyoudu.DailyAccounts.view.activities.base.DialogActivity
+import com.haodustudio.DailyNotes.R
+import com.haodustudio.DailyNotes.databinding.ActivityPlayRecordBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.utils.PlayMediaUtils
+import com.haodustudio.DailyNotes.utils.VolumeUtil
+import com.haodustudio.DailyNotes.view.activities.base.DialogActivity
 import java.util.*
 import kotlin.concurrent.timerTask
 

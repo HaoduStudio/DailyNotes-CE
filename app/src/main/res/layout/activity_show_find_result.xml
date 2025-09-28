@@ -38,7 +38,7 @@
 
             </LinearLayout>
         </FrameLayout>
-        <com.haoduyoudu.DailyAccounts.view.customView.RecyclerViewEmptySupport
+        <com.haodustudio.DailyNotes.view.customView.RecyclerViewEmptySupport
             android:id="@+id/list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

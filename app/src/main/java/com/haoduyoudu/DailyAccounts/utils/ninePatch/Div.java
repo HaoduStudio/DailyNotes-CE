@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.utils.ninePatch;
+package com.haodustudio.DailyNotes.utils.ninePatch;
 
 import java.io.Externalizable;
 import java.io.IOException;

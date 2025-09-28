@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities.base
+package com.haodustudio.DailyNotes.view.activities.base
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.BitmapDrawable
@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.R
-import com.haoduyoudu.DailyAccounts.utils.ViewUtils
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.R
+import com.haodustudio.DailyNotes.utils.ViewUtils
 
 
 open class DialogActivity(private val canDis: Boolean = false, noShot: Boolean = false) : BaseActivity(noShot = noShot) {

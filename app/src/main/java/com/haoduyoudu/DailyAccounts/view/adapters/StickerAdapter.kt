@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.adapters
+package com.haodustudio.DailyNotes.view.adapters
 
 import android.graphics.Bitmap
 import android.view.LayoutInflater
@@ -8,8 +8,8 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.R
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.R
 
 class     StickerAdapter (private val activity: AppCompatActivity, private val StickerList: List<StickerItem>):
         RecyclerView.Adapter<StickerAdapter.ViewHolder>() {

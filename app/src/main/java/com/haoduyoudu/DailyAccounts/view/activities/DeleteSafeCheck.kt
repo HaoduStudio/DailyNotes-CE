@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -10,9 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
 import android.view.ViewGroup
-import com.haoduyoudu.DailyAccounts.R
-import com.haoduyoudu.DailyAccounts.databinding.ActivityDeleteSafeCheckBinding
-import com.haoduyoudu.DailyAccounts.view.activities.base.DialogActivity
+import com.haodustudio.DailyNotes.R
+import com.haodustudio.DailyNotes.databinding.ActivityDeleteSafeCheckBinding
+import com.haodustudio.DailyNotes.view.activities.base.DialogActivity
 import rx_activity_result2.RxActivityResult
 
 class DeleteSafeCheck : DialogActivity() {

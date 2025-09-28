@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface
@@ -6,14 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.databinding.ActivityNoteEditBodyBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.model.listener.ChangeNoteDataCallBack
-import com.haoduyoudu.DailyAccounts.model.models.Note
-import com.haoduyoudu.DailyAccounts.view.activities.base.BaseActivity
-import com.haoduyoudu.DailyAccounts.view.activities.base.DialogActivity
-import com.haoduyoudu.DailyAccounts.viewModel.viewModels.GlobalViewModel
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.databinding.ActivityNoteEditBodyBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.model.listener.ChangeNoteDataCallBack
+import com.haodustudio.DailyNotes.model.models.Note
+import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
+import com.haodustudio.DailyNotes.view.activities.base.DialogActivity
+import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 import kotlin.concurrent.thread
 
 class NoteEditBody : DialogActivity() {

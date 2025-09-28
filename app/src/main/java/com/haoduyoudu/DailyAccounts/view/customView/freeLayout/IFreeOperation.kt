@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.customView.freeLayout
+package com.haodustudio.DailyNotes.view.customView.freeLayout
 
 import android.graphics.Canvas
 import android.graphics.Paint

@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.adapters
+package com.haodustudio.DailyNotes.view.adapters
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
@@ -13,8 +13,8 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.haoduyoudu.DailyAccounts.R
-import com.haoduyoudu.DailyAccounts.helper.makeToast
+import com.haodustudio.DailyNotes.R
+import com.haodustudio.DailyNotes.helper.makeToast
 
 class ImageAdapter (private val activity: AppCompatActivity, private val ImageList: List<ImageItem>) :
         RecyclerView.Adapter<ImageAdapter.ViewHolder>(){

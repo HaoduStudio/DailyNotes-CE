@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.Manifest
 import android.content.BroadcastReceiver
@@ -13,17 +13,17 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.gif.GifDrawable
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.R
-import com.haoduyoudu.DailyAccounts.databinding.ActivityNoteRecordingBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.helper.toArray
-import com.haoduyoudu.DailyAccounts.helper.toGson
-import com.haoduyoudu.DailyAccounts.model.listener.ChangeNoteDataCallBack
-import com.haoduyoudu.DailyAccounts.model.models.Note
-import com.haoduyoudu.DailyAccounts.utils.AudioRecordManager
-import com.haoduyoudu.DailyAccounts.view.activities.base.DialogActivity
-import com.haoduyoudu.DailyAccounts.viewModel.viewModels.GlobalViewModel
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.R
+import com.haodustudio.DailyNotes.databinding.ActivityNoteRecordingBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.helper.toArray
+import com.haodustudio.DailyNotes.helper.toGson
+import com.haodustudio.DailyNotes.model.listener.ChangeNoteDataCallBack
+import com.haodustudio.DailyNotes.model.models.Note
+import com.haodustudio.DailyNotes.utils.AudioRecordManager
+import com.haodustudio.DailyNotes.view.activities.base.DialogActivity
+import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 import com.hw.videoprocessor.util.PcmToWavUtil
 import com.permissionx.guolindev.PermissionX
 import java.io.File

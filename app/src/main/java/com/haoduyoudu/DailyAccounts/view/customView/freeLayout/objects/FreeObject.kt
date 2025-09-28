@@ -1,9 +1,9 @@
-package com.haoduyoudu.DailyAccounts.view.customView.freeLayout.objects
+package com.haodustudio.DailyNotes.view.customView.freeLayout.objects
 
 import android.graphics.*
 import android.util.Log
 import android.view.MotionEvent
-import com.haoduyoudu.DailyAccounts.view.customView.freeLayout.IFreeOperation
+import com.haodustudio.DailyNotes.view.customView.freeLayout.IFreeOperation
 
 open class FreeObject : IFreeOperation {
     val mMatrix = Matrix()

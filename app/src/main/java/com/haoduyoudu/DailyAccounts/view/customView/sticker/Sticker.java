@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.customView.sticker;
+package com.haodustudio.DailyNotes.view.customView.sticker;
 
 import android.graphics.Bitmap;
 import android.graphics.PointF;

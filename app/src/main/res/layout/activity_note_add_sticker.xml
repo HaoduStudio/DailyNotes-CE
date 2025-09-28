@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.haoduyoudu.DailyAccounts.view.customView.sticker.StickerScrollView
+            <com.haodustudio.DailyNotes.view.customView.sticker.StickerScrollView
                 android:id="@+id/mScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -31,14 +31,14 @@
                         android:orientation="vertical">
 
                     </LinearLayout>
-                    <com.haoduyoudu.DailyAccounts.view.customView.sticker.StickerLayout
+                    <com.haodustudio.DailyNotes.view.customView.sticker.StickerLayout
                         android:id="@+id/mStickerLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:visibility="visible" />
                 </FrameLayout>
 
-            </com.haoduyoudu.DailyAccounts.view.customView.sticker.StickerScrollView>
+            </com.haodustudio.DailyNotes.view.customView.sticker.StickerScrollView>
 
             <ImageView
                 android:id="@+id/showright"

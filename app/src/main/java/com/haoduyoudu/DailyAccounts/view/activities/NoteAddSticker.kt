@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -15,14 +15,14 @@ import android.widget.SeekBar
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.databinding.ActivityNoteAddStickerBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.model.models.Note
-import com.haoduyoudu.DailyAccounts.utils.*
-import com.haoduyoudu.DailyAccounts.view.customView.sticker.Sticker
-import com.haoduyoudu.DailyAccounts.view.activities.base.NoRightSlideActivity
-import com.haoduyoudu.DailyAccounts.viewModel.viewModels.GlobalViewModel
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.databinding.ActivityNoteAddStickerBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.model.models.Note
+import com.haodustudio.DailyNotes.utils.*
+import com.haodustudio.DailyNotes.view.customView.sticker.Sticker
+import com.haodustudio.DailyNotes.view.activities.base.NoRightSlideActivity
+import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 import rx_activity_result2.RxActivityResult
 import java.io.*
 import kotlin.math.ceil

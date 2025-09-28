@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -10,17 +10,17 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import com.bumptech.glide.Glide
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.R
-import com.haoduyoudu.DailyAccounts.databinding.ActivityNoteAddMediaBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.helper.toArray
-import com.haoduyoudu.DailyAccounts.helper.toGson
-import com.haoduyoudu.DailyAccounts.model.listener.ChangeNoteDataCallBack
-import com.haoduyoudu.DailyAccounts.model.models.Note
-import com.haoduyoudu.DailyAccounts.utils.FileUtils
-import com.haoduyoudu.DailyAccounts.view.activities.base.BaseActivity
-import com.haoduyoudu.DailyAccounts.viewModel.viewModels.GlobalViewModel
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.R
+import com.haodustudio.DailyNotes.databinding.ActivityNoteAddMediaBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.helper.toArray
+import com.haodustudio.DailyNotes.helper.toGson
+import com.haodustudio.DailyNotes.model.listener.ChangeNoteDataCallBack
+import com.haodustudio.DailyNotes.model.models.Note
+import com.haodustudio.DailyNotes.utils.FileUtils
+import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
+import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 import com.hw.videoprocessor.VideoProcessor
 import com.hw.videoprocessor.util.VideoProgressListener
 import com.permissionx.guolindev.PermissionX

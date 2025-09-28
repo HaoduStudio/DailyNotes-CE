@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.api
+package com.haodustudio.DailyNotes.api
 
 import android.util.Log
 import android.webkit.WebSettings

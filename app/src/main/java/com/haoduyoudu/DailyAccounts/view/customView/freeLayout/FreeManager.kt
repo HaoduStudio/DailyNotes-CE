@@ -1,8 +1,8 @@
-package com.haoduyoudu.DailyAccounts.view.customView.freeLayout
+package com.haodustudio.DailyNotes.view.customView.freeLayout
 
 import android.graphics.Matrix
 import android.util.Log
-import com.haoduyoudu.DailyAccounts.view.customView.freeLayout.objects.FreeObject
+import com.haodustudio.DailyNotes.view.customView.freeLayout.objects.FreeObject
 
 class FreeManager {
     private val mFreeList = ArrayList<FreeObject>()

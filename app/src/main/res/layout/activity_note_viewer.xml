@@ -263,7 +263,7 @@
             android:layout_gravity="end|top"
             android:src="@drawable/ic_viewer_edit" />
 
-        <com.haoduyoudu.DailyAccounts.view.customView.sticker.StickerLayout
+        <com.haodustudio.DailyNotes.view.customView.sticker.StickerLayout
             android:id="@+id/stickerLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

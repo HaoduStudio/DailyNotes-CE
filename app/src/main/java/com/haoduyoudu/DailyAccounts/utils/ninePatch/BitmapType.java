@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.utils.ninePatch;
+package com.haodustudio.DailyNotes.utils.ninePatch;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

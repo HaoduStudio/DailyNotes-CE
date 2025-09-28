@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities
+package com.haodustudio.DailyNotes.view.activities
 
 import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
@@ -11,15 +11,15 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.R
-import com.haoduyoudu.DailyAccounts.databinding.ActivityBackgroundChooserBinding
-import com.haoduyoudu.DailyAccounts.helper.makeToast
-import com.haoduyoudu.DailyAccounts.helper.toBoolean
-import com.haoduyoudu.DailyAccounts.model.models.BackgroundList
-import com.haoduyoudu.DailyAccounts.utils.FileUtils
-import com.haoduyoudu.DailyAccounts.viewModel.repositories.NetworkRepository
-import com.haoduyoudu.DailyAccounts.viewModel.viewModels.GlobalViewModel
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.R
+import com.haodustudio.DailyNotes.databinding.ActivityBackgroundChooserBinding
+import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.helper.toBoolean
+import com.haodustudio.DailyNotes.model.models.BackgroundList
+import com.haodustudio.DailyNotes.utils.FileUtils
+import com.haodustudio.DailyNotes.viewModel.repositories.NetworkRepository
+import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

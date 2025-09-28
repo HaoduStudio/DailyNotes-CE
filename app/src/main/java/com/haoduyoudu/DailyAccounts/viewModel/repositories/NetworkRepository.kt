@@ -1,8 +1,8 @@
-package com.haoduyoudu.DailyAccounts.viewModel.repositories
+package com.haodustudio.DailyNotes.viewModel.repositories
 
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.api.RetrofitInstance
-import com.haoduyoudu.DailyAccounts.api.DailyServer
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.api.RetrofitInstance
+import com.haodustudio.DailyNotes.api.DailyServer
 
 object NetworkRepository {
     private val mengCalls = RetrofitInstance.getInstance(BaseApplication.BASE_SERVER_URI).create(DailyServer::class.java)

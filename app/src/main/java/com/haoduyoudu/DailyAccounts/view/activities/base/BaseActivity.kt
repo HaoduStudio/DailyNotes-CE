@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.activities.base
+package com.haodustudio.DailyNotes.view.activities.base
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,8 +7,8 @@ import android.util.Log
 import android.view.ViewGroup
 import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
-import com.haoduyoudu.DailyAccounts.BaseApplication
-import com.haoduyoudu.DailyAccounts.utils.BitmapUtils
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.utils.BitmapUtils
 
 open class BaseActivity(private val noShot: Boolean = false): AppCompatActivity() {
     private val rootView by lazy { window.decorView }

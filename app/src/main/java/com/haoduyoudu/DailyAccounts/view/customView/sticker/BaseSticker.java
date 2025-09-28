@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.view.customView.sticker;
+package com.haodustudio.DailyNotes.view.customView.sticker;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,8 +11,8 @@ import android.graphics.RectF;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
-import com.haoduyoudu.DailyAccounts.BaseApplication;
-import com.haoduyoudu.DailyAccounts.R;
+import com.haodustudio.DailyNotes.BaseApplication;
+import com.haodustudio.DailyNotes.R;
 
 
 /**

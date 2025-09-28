@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts.model.models
+package com.haodustudio.DailyNotes.model.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

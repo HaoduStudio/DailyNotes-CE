@@ -1,9 +1,9 @@
-package com.haoduyoudu.DailyAccounts.helper
+package com.haodustudio.DailyNotes.helper
 
 import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
-import com.haoduyoudu.DailyAccounts.view.customView.freeLayout.ObjectSaveModel
+import com.haodustudio.DailyNotes.view.customView.freeLayout.ObjectSaveModel
 
 fun Boolean.toInt() = if (this) 1 else 0
 fun Int.toBoolean() = this != 0

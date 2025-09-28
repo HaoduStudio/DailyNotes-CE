@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="152dp"
                 android:layout_gravity="bottom">
-                <com.haoduyoudu.DailyAccounts.view.customView.RecyclerViewEmptySupport
+                <com.haodustudio.DailyNotes.view.customView.RecyclerViewEmptySupport
                     android:id="@+id/listView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />

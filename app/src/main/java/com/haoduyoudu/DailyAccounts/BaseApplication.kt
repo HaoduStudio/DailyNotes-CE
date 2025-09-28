@@ -1,4 +1,4 @@
-package com.haoduyoudu.DailyAccounts
+package com.haodustudio.DailyNotes
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -12,8 +12,8 @@ import android.util.TypedValue
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.haoduyoudu.DailyAccounts.utils.BitmapUtils
-import com.haoduyoudu.DailyAccounts.viewModel.viewModels.GlobalViewModel
+import com.haodustudio.DailyNotes.utils.BitmapUtils
+import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 import rx_activity_result2.RxActivityResult
 import java.util.*
 
