@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.haoduyoudu.DailyAccounts.utils.BitmapUtils
 import com.haoduyoudu.DailyAccounts.viewModel.viewModels.GlobalViewModel
-import com.tencent.bugly.crashreport.CrashReport
 import rx_activity_result2.RxActivityResult
 import java.util.*
 
@@ -53,8 +52,6 @@ class BaseApplication : Application() {
         lateinit var OLD_ASSETS_PATH: String
         lateinit var OLD_DATA_PATH: String
         lateinit var NOTES_PATH: String
-
-        private const val BUGLY_APP_ID = "3d71114e10"
 
         val code2MoodText_old = mapOf<Int,String>(
             1 to "嗨皮的一天～",
@@ -105,7 +102,6 @@ class BaseApplication : Application() {
         TEMPLATE_DOWNLOAD_FROM_URI_PATH = filesDir.absolutePath + "/uri_template/"
         BACKGROUND_DOWNLOAD_FROM_URI_PATH = filesDir.absolutePath + "/uri_background/"
         viewModel = ViewModelProvider.AndroidViewModelFactory(this).create(GlobalViewModel::class.java)
-        CrashReport.initCrashReport(context, BUGLY_APP_ID, false);
     }
 
     override fun onTerminate() {
