@@ -6,10 +6,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
-import android.view.Display
 import android.view.MotionEvent
 import android.view.View
-import com.haodustudio.DailyNotes.utils.DisplayUtil
 import com.haodustudio.DailyNotes.view.customView.freeLayout.objects.FreeObject
 import com.haodustudio.DailyNotes.view.customView.sticker.StickerScrollView
 import kotlin.math.ceil
@@ -57,7 +55,7 @@ class FreeLayout : View, View.OnTouchListener {
             }
 
             MotionEvent.ACTION_MOVE -> {
-                if (focusFreeObj != null) { // draging
+                if (focusFreeObj != null) { // dragging
                     val scrollView = parent.parent as StickerScrollView
                     scrollView.isGetFocus = false
                     onObjFocusChangeListener(focusFreeObj!!, false)
