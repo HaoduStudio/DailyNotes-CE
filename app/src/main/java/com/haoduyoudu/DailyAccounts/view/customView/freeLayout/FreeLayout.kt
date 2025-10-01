@@ -109,7 +109,7 @@ class FreeLayout : View, View.OnTouchListener {
 
     fun getFocusObj() = focusFreeObj
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val objList = mFM.getFreeObjList()
         objList.forEach { obj ->
