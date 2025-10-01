@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace 'com.haodustudio.DailyNotes'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.haodustudio.DailyNotes"
@@ -69,6 +69,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.google.android.material:material:1.11.0'
 }
 
 sentry {

@@ -16,5 +16,12 @@
     <color name="TC_11">#8BC34A</color>
     <color name="TC_12">#ffffff</color>
 
+    <color name="purple_200">#BB86FC</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="teal_700">#018786</color>
+
+
     <color name="dialog_background">#4D000000</color>
 </resources>
