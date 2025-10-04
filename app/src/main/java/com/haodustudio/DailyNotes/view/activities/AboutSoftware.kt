@@ -37,16 +37,26 @@ class AboutSoftware : BaseActivity() {
         binding.openSourceText.setOnClickListener {
             makeToast("视频加载中\n改编自：@我家邻居全是猫")
             val mIntent = Intent(this, ViewImage::class.java)
-            mIntent.putExtra("isVideo", true)
-            mIntent.putExtra("path", BaseApplication.BASE_SERVER_URI + "/static/about_eggshell_video.mp4")
-            startActivity(mIntent)
+            val videoUrl = BaseApplication.buildServerUrl("/static/about_eggshell_video.mp4")
+            if (videoUrl == null) {
+                makeToast("无网络连接")
+            } else {
+                mIntent.putExtra("isVideo", true)
+                mIntent.putExtra("path", videoUrl)
+                startActivity(mIntent)
+            }
         }
 
         binding.artPeopleInfo.setOnClickListener {
             val mIntent = Intent(this, ViewImage::class.java)
-            mIntent.putExtra("path", BaseApplication.BASE_SERVER_URI + "/static/about_thanks_img.png")
-            mIntent.putExtra("zoomEnabled", false)
-            startActivity(mIntent)
+            val imageUrl = BaseApplication.buildServerUrl("/static/about_thanks_img.png")
+            if (imageUrl == null) {
+                makeToast("无网络连接")
+            } else {
+                mIntent.putExtra("path", imageUrl)
+                mIntent.putExtra("zoomEnabled", false)
+                startActivity(mIntent)
+            }
         }
 
         binding.haodusWindow.setOnClickListener {
@@ -76,12 +86,17 @@ class AboutSoftware : BaseActivity() {
         binding.aboutForeground.visibility = View.GONE
         binding.aboutRoot.visibility = View.VISIBLE
 //        Glide.with(this).asGif().load(R.drawable.ic_cute_loading).into(binding.userPpImg)
-        Glide
-            .with(this)
-            .load(BaseApplication.BASE_SERVER_URI + "/static/about_user_privacy_policy.png")
-            .placeholder(R.drawable.ic_cute_loading)
-            .skipMemoryCache(true) // 不使用内存缓存
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .into(binding.userPpImg)
+        val policyUrl = BaseApplication.buildServerUrl("/static/about_user_privacy_policy.png")
+        if (policyUrl == null) {
+            makeToast("无网络连接")
+        } else {
+            Glide
+                .with(this)
+                .load(policyUrl)
+                .placeholder(R.drawable.ic_cute_loading)
+                .skipMemoryCache(true) // 不使用内存缓存
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(binding.userPpImg)
+        }
     }
 }

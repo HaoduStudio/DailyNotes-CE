@@ -55,11 +55,19 @@ class NoteChangeTemplate : BaseActivity(), View.OnClickListener {
         }
 
         makeToast("获取在线模版")
-        NetworkRepository.getTemplateListCall().enqueue(object: Callback<TemplateList> {
+        val call = NetworkRepository.getTemplateListCall()
+        if (call == null) {
+            makeToast("无网络连接")
+        } else {
+            call.enqueue(object: Callback<TemplateList> {
             override fun onResponse(call: Call<TemplateList>, response: Response<TemplateList>) {
                 try {
                     FileUtils.makeRootDirectory(BaseApplication.TEMPLATE_DOWNLOAD_FROM_URI_PATH)
-                    val uriList = response.body()!!.getList().map { BaseApplication.BASE_SERVER_URI + it }
+                    val uriList = response.body()!!.getList().mapNotNull { BaseApplication.buildServerUrl(it) }
+                    if (uriList.isEmpty()) {
+                        makeToast("无网络连接")
+                        return
+                    }
                     makeToast("获取成功")
                     uriList.forEach {
                         Glide.with(this@NoteChangeTemplate).asBitmap().load(it).into(object : SimpleTarget<Bitmap>() {
@@ -88,12 +96,11 @@ class NoteChangeTemplate : BaseActivity(), View.OnClickListener {
 
             override fun onFailure(call: Call<TemplateList>, t: Throwable) {
                 t.printStackTrace()
-                if (t !is IllegalArgumentException) {
-                    makeToast("获取失败，请检查网络")
-                }
+                makeToast("无网络连接")
             }
 
-        })
+            })
+        }
     }
 
     private fun addTmpView(isUri: Boolean, path: String) {

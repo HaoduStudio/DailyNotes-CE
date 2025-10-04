@@ -7,7 +7,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.util.TypedValue
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModel
@@ -20,6 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import rx_activity_result2.RxActivityResult
+import java.net.URI
 import java.util.*
 
 
@@ -45,6 +45,8 @@ class BaseApplication : Application(), ViewModelStoreOwner {
         const val APP_SHARED_PREFERENCES_NAME = "AppConfig"
         const val WEATHER_REFRESH_TIME = 1000*60*60
         const val BASE_SERVER_URI = "example" //已停止服务
+
+    val normalizedBaseServerUrl: String? by lazy { normalizeBaseServerUri(BASE_SERVER_URI) }
 
         val weatherToPath = mapOf<String, String>(
             "xue" to ASSETS_WEATHER_BACKGROUND_PATH + "bg_snow.webp", //雪
@@ -88,6 +90,29 @@ class BaseApplication : Application(), ViewModelStoreOwner {
         )
 
         lateinit var activityBitmap: Bitmap
+
+        private fun normalizeBaseServerUri(raw: String): String? {
+            val trimmed = raw.trim()
+            if (trimmed.isEmpty()) return null
+            val withScheme = if ("://" in trimmed) trimmed else "https://$trimmed"
+            val withTrailingSlash = if (withScheme.endsWith("/")) withScheme else "$withScheme/"
+            return try {
+                val uri = URI(withTrailingSlash)
+                val scheme = uri.scheme?.lowercase(Locale.getDefault())
+                if (scheme == "http" || scheme == "https") withTrailingSlash else null
+            } catch (_: Exception) {
+                null
+            }
+        }
+
+        fun buildServerUrl(path: String? = null): String? {
+            val base = normalizedBaseServerUrl ?: return null
+            val trimmedPath = path?.trim()
+            if (trimmedPath.isNullOrEmpty()) return base
+            val normalizedBase = base.trimEnd('/')
+            val normalizedPath = if (trimmedPath.startsWith("/")) trimmedPath else "/$trimmedPath"
+            return normalizedBase + normalizedPath
+        }
     }
 
     private val activityLifecycleCallbacks = object : ActivityLifecycleCallbacks {

@@ -130,7 +130,12 @@ class GlobalViewModel : ViewModel() {
     private fun updateWeather(fromCache: Boolean = false) {
         if (System.currentTimeMillis() - appConfigPre.getLong("app_background_set_time", Long.MAX_VALUE) >= BaseApplication.WEATHER_REFRESH_TIME || !fromCache) {
             // refresh and post change
-            NetworkRepository.getWeatherCall().enqueue(object : Callback<Weather> {
+            val call = NetworkRepository.getWeatherCall()
+            if (call == null) {
+                makeToast("无网络连接")
+                return
+            }
+            call.enqueue(object : Callback<Weather> {
                 override fun onResponse(call: Call<Weather>, response: Response<Weather>) {
                     try {
                         BaseApplication.weatherToPath[response.body()!!.getWeather()].let {
@@ -150,7 +155,7 @@ class GlobalViewModel : ViewModel() {
 
                 override fun onFailure(call: Call<Weather>, t: Throwable) {
                     t.printStackTrace()
-                    makeToast("加载天气失败")
+                    makeToast("无网络连接")
                 }
             })
         }

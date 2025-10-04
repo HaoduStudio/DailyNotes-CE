@@ -19,6 +19,9 @@ object NetworkUtils {
                 myHandler.sendMessage(message)
             } catch (e: Exception) {
                 e.printStackTrace()
+                val message = Message()
+                message.arg1 = 1
+                myHandler.sendMessage(message)
             }
         }.start()
     }
