@@ -48,12 +48,23 @@ class NoteStickerChooser : BaseActivity(noShot = true) {
             }
 
             makeToast("加载在线贴纸")
-            NetworkRepository.getStickerListCall().enqueue(object : Callback<StickerList> {
+            val call = NetworkRepository.getStickerListCall()
+            if (call == null) {
+                makeToast("无网络连接")
+            } else {
+                call.enqueue(object : Callback<StickerList> {
                 override fun onResponse(call: Call<StickerList>, response: Response<StickerList>) {
                     try {
                         response.body().let {
                             makeToast("成功加载")
-                            it!!.stickerList.map { short -> BaseApplication.BASE_SERVER_URI + short }.forEach { item ->
+                            val remoteStickers = it!!.stickerList.mapNotNull { short ->
+                                BaseApplication.buildServerUrl(short)
+                            }
+                            if (remoteStickers.isEmpty()) {
+                                makeToast("无网络连接")
+                                return
+                            }
+                            remoteStickers.forEach { item ->
                                 // download only
                                 Glide.with(this@NoteStickerChooser).asBitmap().load(item).into(object : SimpleTarget<Bitmap>() {
                                     override fun onResourceReady(
@@ -76,12 +87,11 @@ class NoteStickerChooser : BaseActivity(noShot = true) {
 
                 override fun onFailure(call: Call<StickerList>, t: Throwable) {
                     t.printStackTrace()
-                    if (t !is IllegalArgumentException) {
-                        makeToast("获取在线贴纸失败，请检查网络")
-                    }
+                    makeToast("无网络连接")
                 }
 
-            })
+                })
+            }
         }catch (e: Exception) {
             e.printStackTrace()
             makeToast("Load stickers failure")

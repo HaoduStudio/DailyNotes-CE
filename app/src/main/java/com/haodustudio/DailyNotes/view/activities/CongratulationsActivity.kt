@@ -32,7 +32,7 @@ class CongratulationsActivity : BaseActivity() {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
                 if (msg.arg1 != 0) {
-                    makeToast("当前无网络")
+                    makeToast("无网络连接")
                     finish()
                 }else {
                     loadContent()
@@ -49,8 +49,15 @@ class CongratulationsActivity : BaseActivity() {
     }
 
     private fun loadContent() {
-        Glide.with(this).load(BaseApplication.BASE_SERVER_URI + "/static/congratulations_img.webp").into(binding.conImg)
-        PlayMediaUtils.play(BaseApplication.BASE_SERVER_URI + "/static/congratulations_audio.mp3")
+        val imgUrl = BaseApplication.buildServerUrl("/static/congratulations_img.webp")
+        val audioUrl = BaseApplication.buildServerUrl("/static/congratulations_audio.mp3")
+        if (imgUrl == null || audioUrl == null) {
+            makeToast("无网络连接")
+            finish()
+            return
+        }
+        Glide.with(this).load(imgUrl).into(binding.conImg)
+        PlayMediaUtils.play(audioUrl)
     }
 
     override fun onDestroy() {

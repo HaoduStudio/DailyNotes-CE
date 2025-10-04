@@ -81,14 +81,22 @@ class BackgroundChooser : AppCompatActivity() {
             }
 
             makeToast("加载网络背景")
-            NetworkRepository.getBackgroundListCall().enqueue(object : Callback<BackgroundList> {
+            val call = NetworkRepository.getBackgroundListCall()
+            if (call == null) {
+                makeToast("无网络连接")
+            } else {
+                call.enqueue(object : Callback<BackgroundList> {
                 override fun onResponse(
                     call: Call<BackgroundList>,
                     response: Response<BackgroundList>
                 ) {
                     try {
                         val obj = response.body()!!
-                        val realUriList = obj.getList().map { BaseApplication.BASE_SERVER_URI + it }
+                        val realUriList = obj.getList().mapNotNull { BaseApplication.buildServerUrl(it) }
+                        if (realUriList.isEmpty()) {
+                            makeToast("无网络连接")
+                            return
+                        }
                         if (!FileUtils.exists(BaseApplication.BACKGROUND_DOWNLOAD_FROM_URI_PATH)) {
                             FileUtils.makeRootDirectory(BaseApplication.BACKGROUND_DOWNLOAD_FROM_URI_PATH)
                         }
@@ -134,12 +142,11 @@ class BackgroundChooser : AppCompatActivity() {
 
                 override fun onFailure(call: Call<BackgroundList>, t: Throwable) {
                     t.printStackTrace()
-                    if (t !is IllegalArgumentException) {
-                        makeToast("加载网络背景失败")
-                    }
+                    makeToast("无网络连接")
                 }
             }
             )
+            }
         }catch (e: Exception) {
             e.printStackTrace()
             makeToast("Load background failure")

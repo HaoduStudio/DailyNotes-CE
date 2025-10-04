@@ -32,7 +32,7 @@ class GuideActivity : BaseActivity() {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
                 if (msg.arg1 != 0) {
-                    makeToast("当前无网络")
+                    makeToast("无网络连接")
                     finish()
                 }else {
                     loadBanner()
@@ -42,10 +42,21 @@ class GuideActivity : BaseActivity() {
     }
 
     private fun loadBanner() {
-        NetworkRepository.getGuideImgListCall().enqueue(object : Callback<GuideImgList> {
+        val call = NetworkRepository.getGuideImgListCall()
+        if (call == null) {
+            makeToast("无网络连接")
+            finish()
+            return
+        }
+        call.enqueue(object : Callback<GuideImgList> {
             override fun onResponse(call: Call<GuideImgList>, response: Response<GuideImgList>) {
                 try {
-                    val list = response.body()!!.getList().map { BaseApplication.BASE_SERVER_URI + it }
+                    val list = response.body()!!.getList().mapNotNull { BaseApplication.buildServerUrl(it) }
+                    if (list.isEmpty()) {
+                        makeToast("无网络连接")
+                        finish()
+                        return
+                    }
                     val adapter = BannerAdapter(this@GuideActivity, list)
                     binding.banner.adapter = adapter
                 }catch (e: Exception) {
@@ -55,7 +66,7 @@ class GuideActivity : BaseActivity() {
 
             override fun onFailure(call: Call<GuideImgList>, t: Throwable) {
                 t.printStackTrace()
-                makeToast("获取引导失败")
+                makeToast("无网络连接")
             }
 
         })
