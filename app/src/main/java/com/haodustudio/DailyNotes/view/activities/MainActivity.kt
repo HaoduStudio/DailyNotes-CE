@@ -100,7 +100,8 @@ class MainActivity : BaseActivity() {
         }
 
         binding.personalize.setOnClickListener {
-            checkNotesAndStartActivity(BackgroundChooser::class.java)
+            startActivity(Intent(this, BackgroundChooser::class.java))
+            binding.mDrawerLayout.closeDrawer(GravityCompat.END)
         }
 
         binding.find.setOnClickListener {
@@ -272,7 +273,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun refreshBackground() {
-        if (backgroundPath.isNotEmpty() && mNoteList.isNotEmpty()) {
+        if (backgroundPath.isNotEmpty()) {
             Glide.with(this).load(backgroundPath).into(binding.backgroundImg)
         } else {
             binding.backgroundImg.setImageResource(android.R.color.black)

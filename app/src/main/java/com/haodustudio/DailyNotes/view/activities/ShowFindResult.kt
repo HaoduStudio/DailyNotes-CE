@@ -123,7 +123,7 @@ class ShowFindResult : BaseActivity() {
     }
 
     private fun refreshBackground() {
-        if (noteList.isNotEmpty() && tempBackgroundPath.isNotEmpty()) {
+        if (tempBackgroundPath.isNotEmpty()) {
             Glide.with(this).load(tempBackgroundPath).into(binding.backgroundImg)
         } else {
             binding.backgroundImg.setImageResource(R.color.black)
