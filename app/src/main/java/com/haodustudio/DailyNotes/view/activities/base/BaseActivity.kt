@@ -1,0 +1,57 @@
+package com.haodustudio.DailyNotes.view.activities.base
+
+import android.content.Intent
+import android.os.Bundle
+import android.transition.Explode
+import android.util.Log
+import android.view.ViewGroup
+import android.view.Window
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.utils.BitmapUtils
+
+open class BaseActivity(private val noShot: Boolean = false): AppCompatActivity() {
+    private val rootView by lazy { window.decorView }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
+
+    override fun startActivity(intent: Intent?) {
+        shot()
+        super.startActivity(intent)
+    }
+
+    override fun startActivityForResult(intent: Intent, requestCode: Int) {
+        shot()
+        super.startActivityForResult(intent, requestCode)
+    }
+
+    override fun startActivityForResult(intent: Intent, requestCode: Int, options: Bundle?) {
+        shot()
+        super.startActivityForResult(intent, requestCode, options)
+    }
+
+    private fun shot() {
+        if (!noShot) {
+            Log.d("BaseActivity", "shot")
+            rootView.post {
+                try {
+                    BaseApplication.activityBitmap = BitmapUtils.viewConversionBitmap(rootView)
+                }catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+}
