@@ -67,6 +67,7 @@ class GuideActivity : BaseActivity() {
             override fun onFailure(call: Call<GuideImgList>, t: Throwable) {
                 t.printStackTrace()
                 makeToast("无网络连接")
+                finish()
             }
 
         })
