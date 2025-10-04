@@ -1,52 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:overScrollMode="never"
     tools:context=".view.activities.MoodCalendar">
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <ImageButton
+        android:id="@+id/leftButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        app:tint="@color/white"
+        android:src="@drawable/ic_cal_left"
+        app:layout_constraintBottom_toBottomOf="@+id/mouth"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mouth" />
+
+    <TextView
+        android:id="@+id/mouth"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/leftButton"
-                android:layout_width="27dp"
-                android:layout_height="27dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/ic_cal_left"
-                android:layout_gravity="start"
-                android:layout_marginStart="10dp"/>
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/rightButton"
+        app:layout_constraintStart_toEndOf="@+id/leftButton"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="2025/10" />
 
-            <TextView
-                android:id="@+id/mouth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="Jun"
-                android:textSize="16sp"
-                android:layout_gravity="center_horizontal" />
+    <ImageButton
+        android:id="@+id/rightButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_cal_right"
+        app:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/mouth"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mouth" />
 
-            <Button
-                android:id="@+id/rightButton"
-                android:layout_width="27dp"
-                android:layout_height="27dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/ic_cal_right"
-                android:layout_gravity="end"
-                android:layout_marginEnd="10dp"/>
-        </FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/calendar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mouth"
+        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:spanCount="7" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/calendar"
-            android:layout_width="150dp"
-            android:layout_height="210dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp" />
-    </LinearLayout>
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,10 +2,9 @@ package com.haodustudio.DailyNotes.view.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -20,139 +19,113 @@ import com.haodustudio.DailyNotes.utils.ViewUtils
 import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
 import com.haodustudio.DailyNotes.view.adapters.FindNoteAdapter
 import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
-import kotlin.concurrent.thread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ShowFindResult : BaseActivity() {
+
     private val binding by lazy { ActivityShowFindResultBinding.inflate(layoutInflater) }
-    private val appViewModel = ViewModelProvider(
-        BaseApplication.instance,
-        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
-    )[GlobalViewModel::class.java]
-    private var findingRunning = true
+    private val appViewModel by lazy {
+        ViewModelProvider(
+            BaseApplication.instance,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+        )[GlobalViewModel::class.java]
+    }
+
     private val noteList = ArrayList<FindNoteAdapter.NoteItem>()
-    private lateinit var adapter: FindNoteAdapter
+    private lateinit var findAdapter: FindNoteAdapter
     private var tempBackgroundPath = ""
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val keywordList = intent.getStringArrayExtra("keyword")
-        if (keywordList == null) {
+        val keywords = intent.getStringArrayExtra("keyword")
+        if (keywords == null || keywords.isEmpty()) {
             makeToast("关键词错误")
             finish()
             return
         }
 
-        val sb = StringBuilder()
-        keywordList.forEach {
-            sb.append(it)
-            sb.append(" ")
-        }
-        ViewUtils.ellipsizeEnd(binding.title, 1, "查找: $sb")
+        initViews(keywords)
+        initObservers(keywords)
+    }
 
-        appViewModel.notesList.observe(this) { oList ->
-            val it = oList.sortedBy { it2 ->
-                DateUtils.formatYYMMDD(it2.yy, it2.mm, it2.dd, DateUtils.FORMAT_YYYY_MM_DD)
-            }.reversed()
+    private fun initViews(keywords: Array<String>) {
+        val titleText = "查找: ${keywords.joinToString(" ")}"
+        ViewUtils.ellipsizeEnd(binding.title, 1, titleText)
 
-            val isFirstLoad = !::adapter.isInitialized
-            if (isFirstLoad) {
-                adapter = FindNoteAdapter(this@ShowFindResult, noteList)
-                adapter.setKeyword(keywordList)
-                binding.listView.apply {
-                    layoutManager = LinearLayoutManager(this@ShowFindResult).apply {
-                        orientation = LinearLayoutManager.VERTICAL
-                    }
-                    adapter = this@ShowFindResult.adapter
-                }
+        findAdapter = FindNoteAdapter(this, noteList)
+        findAdapter.setKeyword(keywords)
 
-                adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-                    override fun onChanged() {
-                        super.onChanged()
-                        refreshBackground()
-                    }
-                })
-
-                adapter.setOnItemClickListener { view, i ->
-                    try {
-                        val note = noteList[i]
-                        val mIntent = Intent(this, NoteViewer::class.java)
-                        mIntent.putExtra("noteId", note.data.id)
-                        startActivity(mIntent)
-                    }catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-                adapter.setOnItemLongClickListener { view, i ->
-                    try {
-                        val note = noteList[i]
-                        val mIntent = Intent(this, NoteOption::class.java)
-                        mIntent.putExtra("noteId", note.data.id)
-                        mIntent.putExtra("type", note.data.type)
-                        startActivity(mIntent)
-                    }catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                    null
-                }
-                makeToast("查找中...")
-            }
-
-            noteList.clear()
-            adapter.notifyDataSetChanged()
-
-            thread {
-                try {
-                    var i = 0
-                    while (findingRunning && i < it.size) {
-                        if (it[i].type == NOTE_TYPE_V1) {
-                            for (aKeyword in keywordList) {
-                                if (it[i].data["body"]!!.lowercase().contains(aKeyword.lowercase())
-                                    || it[i].mood.second.lowercase().contains(aKeyword.lowercase())) {
-                                    noteList.add(FindNoteAdapter.NoteItem(it[i]))
-                                    Log.d("ShowFindResult", "在手帐中找到关键词: $it")
-                                    break
-                                }
-                            }
-                        }
-                        i++
-                    }
-                    runOnUiThread {
-                        adapter.notifyDataSetChanged()
-                        if (isFirstLoad) {
-                            makeToast("找到 ${adapter.itemCount} 个手帐")
-                        }
-                    }
-                }catch (e: Exception) {
-                    e.printStackTrace()
-                    runOnUiThread {
-                        makeToast("查找失败")
-                    }
-                }
-            }
+        binding.listView.apply {
+            layoutManager = LinearLayoutManager(this@ShowFindResult)
+            adapter = findAdapter
+            setEmptyView(binding.emptyView)
         }
 
-        appViewModel.appBackgroundPath.observe(this) {
-            tempBackgroundPath = it
+        findAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                super.onChanged()
+                refreshBackground()
+            }
+        })
+
+        findAdapter.setOnItemClickListener { _, i ->
+            val note = noteList.getOrNull(i) ?: return@setOnItemClickListener
+            startActivity(Intent(this, NoteViewer::class.java).putExtra("noteId", note.data.id))
+        }
+
+        findAdapter.setOnItemLongClickListener { _, i ->
+            val note = noteList.getOrNull(i) ?: return@setOnItemLongClickListener false
+            startActivity(Intent(this, NoteOption::class.java).apply {
+                putExtra("noteId", note.data.id)
+                putExtra("type", note.data.type)
+            })
+            true
+        }
+    }
+
+    private fun initObservers(keywords: Array<String>) {
+        appViewModel.notesList.observe(this) { allNotes ->
+            makeToast("查找中...")
+            performSearch(allNotes, keywords)
+        }
+
+        appViewModel.appBackgroundPath.observe(this) { path ->
+            tempBackgroundPath = path
             refreshBackground()
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        findingRunning = false
+    @SuppressLint("NotifyDataSetChanged")
+    private fun performSearch(allNotes: List<Note>, keywords: Array<String>) {
+        lifecycleScope.launch(Dispatchers.Default) {
+            val sortedNotes = allNotes.sortedByDescending {
+                DateUtils.formatYYMMDD(it.yy, it.mm, it.dd, DateUtils.FORMAT_YYYY_MM_DD)
+            }
+
+            val results = sortedNotes.filter { note ->
+                note.type == NOTE_TYPE_V1 && keywords.any { keyword ->
+                    note.data["body"]!!.contains(keyword, ignoreCase = true) ||
+                            note.mood.second.contains(keyword, ignoreCase = true)
+                }
+            }.map { FindNoteAdapter.NoteItem(it) }
+
+            withContext(Dispatchers.Main) {
+                noteList.clear()
+                noteList.addAll(results)
+                findAdapter.notifyDataSetChanged()
+                makeToast("找到 ${results.size} 个手帐")
+            }
+        }
     }
 
     private fun refreshBackground() {
-        if (adapter.itemCount > 0) {
-            if (tempBackgroundPath != "") {
-                Glide.with(this@ShowFindResult).load(
-                    tempBackgroundPath
-                ).into(binding.backgroundImg)
-            }
-        }else {
+        if (noteList.isNotEmpty() && tempBackgroundPath.isNotEmpty()) {
+            Glide.with(this).load(tempBackgroundPath).into(binding.backgroundImg)
+        } else {
             binding.backgroundImg.setImageResource(R.color.black)
         }
     }

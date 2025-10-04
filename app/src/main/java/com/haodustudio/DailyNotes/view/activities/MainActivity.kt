@@ -1,7 +1,6 @@
 package com.haodustudio.DailyNotes.view.activities
 
 import android.annotation.SuppressLint
-import android.app.ActivityOptions
 import android.app.backup.BackupManager
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -10,8 +9,7 @@ import android.os.PowerManager
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
+import androidx.core.content.edit
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -40,182 +38,154 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
 import java.io.FileInputStream
 import java.io.ObjectInputStream
-import androidx.core.content.edit
-
 
 class MainActivity : BaseActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val appViewModel = ViewModelProvider(
-        BaseApplication.instance,
-        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
-    )[GlobalViewModel::class.java]
+    private val appViewModel by lazy {
+        ViewModelProvider(
+            BaseApplication.instance,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+        )[GlobalViewModel::class.java]
+    }
     private lateinit var notesAdapter: BaseNoteAdapter
     private val mNoteList = ArrayList<BaseNoteAdapter.NoteItem>()
-    private lateinit var mWakeLock: PowerManager.WakeLock
-    private var _allDone = false
-    private var allDone: Boolean
-        get() = _allDone
-        set(value) {
-            _allDone = value
-            if (value) {
-                try {
-                    mWakeLock.release()
-                }catch (_: Exception) { }
-            }else {
-                try {
-                    val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-                    mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "DailyNote:WakeWoke")
-                    mWakeLock.acquire(2*60*1000L)
-                }catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
-
+    private var mWakeLock: PowerManager.WakeLock? = null
+    private var isStartupProcessDone = false
     private var backgroundPath = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        acquireWakeLock()
+        runStartupChecks()
+        setupClickListeners()
+    }
 
-        allDone = false
-
+    private fun runStartupChecks() {
         lifecycleScope.launch {
             beforeStartupCheck().flowOn(Dispatchers.IO)
                 .onCompletion {
-                    startMainPage()
-                }.flowOn(Dispatchers.Main)
-                .collect {
                     withContext(Dispatchers.Main) {
-                        binding.startTips.text = it
-                        if (it == "Done") {
-                            makeToast("更新完成")
-                            startActivity(
-                                Intent(
-                                this@MainActivity, GuideActivity::class.java
-                            )
-                            )
-                            startActivity(Intent(
-                                this@MainActivity, CongratulationsActivity::class.java
-                            ))
+                        startMainPage()
+                    }
+                }
+                .collect { message ->
+                    withContext(Dispatchers.Main) {
+                        binding.startTips.text = message
+                        if (message == "Done") {
+                            makeToast(getString(R.string.update_complete))
+                            startActivity(Intent(this@MainActivity, GuideActivity::class.java))
+                            startActivity(Intent(this@MainActivity, CongratulationsActivity::class.java))
                         }
                     }
                 }
         }
+    }
 
+    private fun setupClickListeners() {
         binding.menu.setOnClickListener {
             binding.mDrawerLayout.openDrawer(GravityCompat.END)
         }
 
         binding.write.setOnClickListener {
-            val mIntent = Intent(this, NoteChangeMood::class.java)
-            mIntent.putExtra("firstWrite", true)
-            startActivity(mIntent)
+            startActivity(Intent(this, NoteChangeMood::class.java).apply {
+                putExtra("firstWrite", true)
+            })
             binding.mDrawerLayout.closeDrawer(GravityCompat.END)
         }
 
         binding.moodCalendar.setOnClickListener {
-            if (mNoteList.isEmpty()) {
-                makeToast("请至少写一篇手帐")
-            }else {
-                val mIntent = Intent(this, MoodCalendar::class.java)
-                startActivity(mIntent)
-            }
-            binding.mDrawerLayout.closeDrawer(GravityCompat.END)
+            checkNotesAndStartActivity(MoodCalendar::class.java)
         }
 
         binding.personalize.setOnClickListener {
-            if (mNoteList.isEmpty()) {
-                makeToast("请至少写一篇手帐")
-            }else {
-                val mIntent = Intent(this, BackgroundChooser::class.java)
-                startActivity(mIntent)
-            }
-            binding.mDrawerLayout.closeDrawer(GravityCompat.END)
+            checkNotesAndStartActivity(BackgroundChooser::class.java)
         }
 
         binding.find.setOnClickListener {
-            if (mNoteList.isEmpty()) {
-                makeToast("请至少写一篇手帐")
-            }else {
-                val mIntent = Intent(this, SearchNote::class.java)
-                startActivity(mIntent)
-            }
-            binding.mDrawerLayout.closeDrawer(GravityCompat.END)
+            checkNotesAndStartActivity(SearchNote::class.java)
         }
 
         binding.guide.setOnClickListener {
-            val mIntent = Intent(this, GuideActivity::class.java)
-            startActivity(mIntent)
+            startActivity(Intent(this, GuideActivity::class.java))
             binding.mDrawerLayout.closeDrawer(GravityCompat.END)
         }
 
         binding.about.setOnClickListener {
-            val mIntent = Intent(this, AboutSoftware::class.java)
-            startActivity(mIntent)
+            startActivity(Intent(this, AboutSoftware::class.java))
             binding.mDrawerLayout.closeDrawer(GravityCompat.END)
         }
     }
 
+    private fun checkNotesAndStartActivity(activityClass: Class<*>) {
+        if (mNoteList.isEmpty()) {
+            makeToast(getString(R.string.please_write_one_note_at_least))
+        } else {
+            startActivity(Intent(this, activityClass))
+        }
+        binding.mDrawerLayout.closeDrawer(GravityCompat.END)
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun startMainPage() {
-        allDone = true
+        releaseWakeLock()
+        isStartupProcessDone = true
 
         binding.startTips.visibility = View.GONE
         binding.startBg.visibility = View.GONE
 
-        appViewModel.notesList.observe(this) {
+        initAdapter()
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        appViewModel.notesList.observe(this) { notes ->
             mNoteList.clear()
-            it.forEach { j -> mNoteList.add(BaseNoteAdapter.NoteItem(j)) }
-            mNoteList.sortBy { it2 ->
-                DateUtils.formatYYMMDD(it2.data.yy, it2.data.mm, it2.data.dd, DateUtils.FORMAT_YYYY_MM_DD)
+            notes.forEach { note -> mNoteList.add(BaseNoteAdapter.NoteItem(note)) }
+            mNoteList.sortByDescending {
+                DateUtils.formatYYMMDD(it.data.yy, it.data.mm, it.data.dd, DateUtils.FORMAT_YYYY_MM_DD)
             }
-            mNoteList.reverse()
+            notesAdapter.notifyDataSetChanged()
+        }
 
-            if (binding.listView.adapter == null || !::notesAdapter.isInitialized) {
-                Log.d("MainActivity", "设置转换器")
-                initAdapter()
-
-                appViewModel.appBackgroundPath.observe(this) { it2 ->
-                    backgroundPath = it2
-                    refreshBackground()
-                }
-            }else {
-                notesAdapter.notifyDataSetChanged()
-            }
+        appViewModel.appBackgroundPath.observe(this) { path ->
+            backgroundPath = path
+            refreshBackground()
         }
     }
 
     private fun initAdapter() {
+        if (::notesAdapter.isInitialized) return
+
+        binding.listView.setEmptyView(binding.emptyViewLayout.root)
+
         notesAdapter = BaseNoteAdapter(this, mNoteList)
         binding.listView.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity).apply {
-                orientation = LinearLayoutManager.VERTICAL
-            }
+            layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = notesAdapter
         }
 
-        notesAdapter.setOnItemClickListener { view, pos ->
-            val targetNote = mNoteList[pos]
-            if (targetNote.data.type == NOTE_TYPE_V1) {
-                startActivity(Intent(this, NoteViewer::class.java).apply {
-                    putExtra("noteId", targetNote.data.id)
-                })
-            }else if (targetNote.data.type == NOTE_TYPE_V2) {
-                startActivity(Intent(this, FreeMakeNote::class.java).apply {
-                    putExtra("noteId", targetNote.data.id)
-                })
+        notesAdapter.setOnItemClickListener { _, pos ->
+            val targetNote = mNoteList[pos].data
+            val intent = when (targetNote.type) {
+                NOTE_TYPE_V1 -> Intent(this, NoteViewer::class.java)
+                NOTE_TYPE_V2 -> Intent(this, FreeMakeNote::class.java)
+                else -> null
+            }
+            intent?.let {
+                it.putExtra("noteId", targetNote.id)
+                startActivity(it)
             }
         }
 
         notesAdapter.setOnItemLongClickListener { _, pos ->
-            val targetNote = mNoteList[pos]
-            val mIntent = Intent(this, NoteOption::class.java)
-            mIntent.putExtra("noteId", targetNote.data.id)
-            mIntent.putExtra("type", targetNote.data.type)
-            startActivity(mIntent)
-            null
+            val targetNote = mNoteList[pos].data
+            startActivity(Intent(this, NoteOption::class.java).apply {
+                putExtra("noteId", targetNote.id)
+                putExtra("type", targetNote.type)
+            })
+            true
         }
 
         notesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
@@ -228,104 +198,106 @@ class MainActivity : BaseActivity() {
 
     private suspend fun beforeStartupCheck() = flow {
         val sharedPreferences = getSharedPreferences(BaseApplication.APP_SHARED_PREFERENCES_NAME, 0)
-        val load = sharedPreferences.getBoolean("transportSuccessful", false)
-        if (!load) {
-            emit("正在更新...\n请不要在更新期间关闭应用！")
+        val transportCompleted = sharedPreferences.getBoolean("transportSuccessful", false)
+        if (!transportCompleted) {
+            emit(getString(R.string.updating_please_wait))
             delay(1500)
+
             FileUtils.delete(BaseApplication.OLD_ASSETS_PATH)
             FileUtils.makeRootDirectory(BaseApplication.NOTES_PATH)
-            val dirsName = NoteUtils.getOldNotesFileList()
-            for (aNote in dirsName) {
-                val targetDir = BaseApplication.OLD_DATA_PATH + aNote + '/'
-                val newDirInNote = BaseApplication.NOTES_PATH + aNote + '/'
+            val oldNotes = NoteUtils.getOldNotesFileList()
+
+            oldNotes.forEach { noteName ->
+                val oldDir = "${BaseApplication.OLD_DATA_PATH}$noteName/"
+                val newDir = "${BaseApplication.NOTES_PATH}$noteName/"
                 try {
-                    val date = DateUtils.getCalendarFromFormat(aNote, DateUtils.FORMAT_YYYY_MM_DD)
-                    val mood = FileUtils.readTxtFile(targetDir + "mood.txt").split("$[%|!|%]$")
-                    val moodText = when(mood.size) {
-                        1 -> BaseApplication.code2MoodText_old[mood[0].toInt()]!!
-                        else -> mood[1]
-                    }
+                    val date = DateUtils.getCalendarFromFormat(noteName, DateUtils.FORMAT_YYYY_MM_DD)
+                    val moodInfo = FileUtils.readTxtFile(oldDir + "mood.txt").split("$[%|!|%]$")
+                    val moodText = if (moodInfo.size > 1) moodInfo[1] else BaseApplication.code2MoodText_old[moodInfo[0].toInt()] ?: ""
 
-                    val recordList = ArrayList(FileUtils.getFilesList(targetDir + "record").map { newDirInNote + "record/" + it })
-                    val imageList = ArrayList(FileUtils.getFilesList(targetDir + "image").map { newDirInNote + "image/" + it})
-                    val videoList = ArrayList(FileUtils.getFilesList(targetDir + "video").map { newDirInNote + "video/" + it})
-
-                    val bean = Note(
-                        DateUtils.getYYYYFromCalendar(date),
-                        DateUtils.getMMFromCalendar(date),
-                        DateUtils.getDDFromCalendar(date),
-                        Pair(mood[0].toInt(), moodText),
-                        NOTE_TYPE_V1,
-                        hashMapOf(
-                            "template" to Pair(false, FileUtils.readTxtFile(targetDir + "template.data").ifEmpty { "1" }).toGson(),
-                            "textColor" to FileUtils.readTxtFile(targetDir + "textcolor.data").ifEmpty { "1" },
-                            "noteFolder" to newDirInNote,
-                            "body" to FileUtils.readTxtFile(targetDir + "text.txt"),
-                            "recordPaths" to recordList.toGson(),
-                            "imagePaths" to imageList.toGson(),
-                            "videoPaths" to videoList.toGson(),
+                    val note = Note(
+                        yy = DateUtils.getYYYYFromCalendar(date),
+                        mm = DateUtils.getMMFromCalendar(date),
+                        dd = DateUtils.getDDFromCalendar(date),
+                        mood = Pair(moodInfo[0].toInt(), moodText),
+                        type = NOTE_TYPE_V1,
+                        data = hashMapOf(
+                            "template" to Pair(false, FileUtils.readTxtFile(oldDir + "template.data").ifEmpty { "1" }).toGson(),
+                            "textColor" to FileUtils.readTxtFile(oldDir + "textcolor.data").ifEmpty { "1" },
+                            "noteFolder" to newDir,
+                            "body" to FileUtils.readTxtFile(oldDir + "text.txt"),
+                            "recordPaths" to FileUtils.getFilesList(oldDir + "record").map { "$newDir/record/$it" }.toGson(),
+                            "imagePaths" to FileUtils.getFilesList(oldDir + "image").map { "$newDir/image/$it" }.toGson(),
+                            "videoPaths" to FileUtils.getFilesList(oldDir + "video").map { "$newDir/video/$it" }.toGson(),
                         )
                     )
+                    appViewModel.addNote(note)
 
-                    appViewModel.addNote(bean)
+                    FileUtils.copyFolder(oldDir + "record", newDir + "record")
+                    FileUtils.copyFolder(oldDir + "image", newDir + "image")
+                    FileUtils.copyFolder(oldDir + "video", newDir + "video")
 
-                    if (FileUtils.exists(targetDir + "record")) {
-                        FileUtils.copyFolder(targetDir + "record", newDirInNote + "record")
+                    if (FileUtils.exists(oldDir + "sitcker.sk")) {
+                        convertStickerData(oldDir + "sitcker.sk", newDir)
                     }
 
-                    if (FileUtils.exists(targetDir + "image")) {
-                        FileUtils.copyFolder(targetDir + "image", newDirInNote + "image")
-                    }
-
-                    if (FileUtils.exists(targetDir + "video")) {
-                        FileUtils.copyFolder(targetDir + "video", newDirInNote + "video")
-                    }
-
-                    if (FileUtils.exists(targetDir + "sitcker.sk")) {
-                        val path = targetDir + "sitcker.sk"
-                        val fileIn = FileInputStream(path)
-                        val fin = ObjectInputStream(fileIn)
-                        val allPosData = (fin.readObject() as ArrayList<FloatArray>)
-                        val allBitmapData = (fin.readObject() as ArrayList<ByteArray>)
-                        fin.close()
-                        fileIn.close()
-                        val pairs = ArrayList<Pair<String, FloatArray>>()
-                        for (i in 0 until allPosData.size) {
-                            val bitmap = BitmapFactory.decodeByteArray(allBitmapData[i], 0, allBitmapData[i].size)
-                            val bitmapString = BitmapUtils.bitmapToString(bitmap)
-                            bitmap.recycle()
-                            val mp = Pair(bitmapString, allPosData[i])
-                            pairs.add(mp)
-                        }
-                        val finallyData = StickerSaveModel(pairs)
-                        FileUtils.writeTxtToFile(finallyData.toGson(), newDirInNote, "sticker.json")
-                    }
-
-                    emit("Moved $aNote Successful")
-                    FileUtils.delete(targetDir)
-                }catch (e: Exception) {
+                    emit("Moved $noteName Successful")
+                    FileUtils.delete(oldDir)
+                } catch (e: Exception) {
                     e.printStackTrace()
-                    emit("Moved $aNote Failure")
+                    emit("Moved $noteName Failure")
                 }
             }
             sharedPreferences.edit { putBoolean("transportSuccessful", true) }
-
             delay(200)
             emit("Done")
         }
     }
 
+    private fun convertStickerData(oldPath: String, newDir: String) {
+        ObjectInputStream(FileInputStream(oldPath)).use { ois ->
+            val allPosData = ois.readObject() as ArrayList<FloatArray>
+            val allBitmapData = ois.readObject() as ArrayList<ByteArray>
+            val stickerPairs = allPosData.zip(allBitmapData).map { (pos, bytes) ->
+                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                Pair(BitmapUtils.bitmapToString(bitmap), pos).also { bitmap.recycle() }
+            }
+            val stickerModel = StickerSaveModel(ArrayList(stickerPairs))
+            FileUtils.writeTxtToFile(stickerModel.toGson(), newDir, "sticker.json")
+        }
+    }
+
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        return if (allDone) super.dispatchTouchEvent(ev) else false
+        return if (isStartupProcessDone) super.dispatchTouchEvent(ev) else false
     }
 
     private fun refreshBackground() {
         if (backgroundPath.isNotEmpty() && mNoteList.isNotEmpty()) {
-            Glide.with(this@MainActivity).load(backgroundPath).into(
-                binding.backgroundImg
-            )
-        }else {
-            binding.backgroundImg.setImageResource(R.color.black)
+            Glide.with(this).load(backgroundPath).into(binding.backgroundImg)
+        } else {
+            binding.backgroundImg.setImageResource(android.R.color.black)
+        }
+    }
+
+    private fun acquireWakeLock() {
+        try {
+            if (mWakeLock?.isHeld != true) {
+                val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+                mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "DailyNote:WakeLockTag")
+                mWakeLock?.acquire(2 * 60 * 1000L)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun releaseWakeLock() {
+        try {
+            if (mWakeLock?.isHeld == true) {
+                mWakeLock?.release()
+                mWakeLock = null
+            }
+        } catch (_: Exception) {
         }
     }
 }

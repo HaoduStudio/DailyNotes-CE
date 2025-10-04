@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">每日手帐</string>
+
+    <string name="menu">菜单</string>
+    <string name="write_note">写手帐</string>
+    <string name="mood_calendar">心情日历</string>
+    <string name="search">查找</string>
+    <string name="personalize">个性化</string>
+    <string name="guide">使用指南</string>
+    <string name="about">关于软件</string>
+
+    <string name="please_write_one_note_at_least">请至少写一篇手帐</string>
+    <string name="update_complete">更新完成</string>
+
+    <string name="updating_please_wait">正在更新…\n请不要在更新期间关闭应用！</string>
+    <string name="migration_successful">迁移 %1$s 成功</string>
+    <string name="migration_failure">迁移 %1$s 失败</string>
+    <string name="done">完成</string>
 </resources>

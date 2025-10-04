@@ -6,12 +6,26 @@ import android.transition.Explode
 import android.util.Log
 import android.view.ViewGroup
 import android.view.Window
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.utils.BitmapUtils
 
 open class BaseActivity(private val noShot: Boolean = false): AppCompatActivity() {
     private val rootView by lazy { window.decorView }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
 
     override fun startActivity(intent: Intent?) {
         shot()

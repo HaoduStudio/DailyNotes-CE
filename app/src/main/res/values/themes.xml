@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary branding color -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-
-        <!-- Secondary branding color -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+    <style name="AppTheme" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:statusBarColor">@color/white</item>
 
         <!-- Optional customizations -->
         <item name="android:largeHeap">true</item>
@@ -19,19 +11,18 @@
     <!-- 启动页 theme -->
     <style name="AppTheme.StartingWindowTheme" parent="AppTheme">
         <item name="android:windowBackground">@drawable/bg_app_starting</item>
-        <item name="android:hardwareAccelerated">false</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <!-- 禁止右滑退出 -->
     <style name="NoRightSlideTheme" parent="AppTheme">
-        <item name="android:windowSwipeToDismiss">false</item>
+        <item name="android:windowSwipeToDismiss" tools:ignore="WearBackNavigation">false</item>
     </style>
 
     <!-- 对话框风格 Activity -->
     <style name="DialogActivityTheme" parent="AppTheme">
-        <item name="android:windowSwipeToDismiss">false</item>
+        <item name="android:windowSwipeToDismiss" tools:ignore="WearBackNavigation">false</item>
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 

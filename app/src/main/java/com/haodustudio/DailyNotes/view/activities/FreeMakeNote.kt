@@ -1,25 +1,24 @@
 package com.haodustudio.DailyNotes.view.activities
 
 import android.Manifest
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Paint
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
-import android.view.MotionEvent
 import android.view.View
-import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.widget.SeekBar
-import androidx.core.animation.addListener
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.children
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.R
@@ -32,9 +31,7 @@ import com.haodustudio.DailyNotes.utils.BitmapFilletUtils
 import com.haodustudio.DailyNotes.utils.BitmapUtils
 import com.haodustudio.DailyNotes.utils.DisplayUtil
 import com.haodustudio.DailyNotes.utils.FileUtils
-import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
 import com.haodustudio.DailyNotes.view.activities.base.DialogActivity
-import com.haodustudio.DailyNotes.view.activities.base.NoRightSlideActivity
 import com.haodustudio.DailyNotes.view.customView.freeLayout.ObjectSaveModel
 import com.haodustudio.DailyNotes.view.customView.freeLayout.objects.BitmapObject
 import com.haodustudio.DailyNotes.view.customView.freeLayout.objects.TextObject
@@ -44,469 +41,382 @@ import com.xtc.shareapi.share.communication.SendMessageToXTC
 import com.xtc.shareapi.share.manager.ShareMessageManager
 import com.xtc.shareapi.share.shareobject.XTCImageObject
 import com.xtc.shareapi.share.shareobject.XTCShareMessage
-import io.reactivex.Observer
-import io.reactivex.disposables.Disposable
-import rx_activity_result2.Result
-import rx_activity_result2.RxActivityResult
-import kotlin.concurrent.thread
-import kotlin.math.abs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class FreeMakeNote: DialogActivity(noShot = true, canDis = true) {
+@SuppressLint("CheckResult")
+class FreeMakeNote : DialogActivity(noShot = true, canDis = true) {
+
     private val binding by lazy { ActivityFreeMakeNoteBinding.inflate(layoutInflater) }
-    private val appViewModel = ViewModelProvider(
-        BaseApplication.instance,
-        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
-    )[GlobalViewModel::class.java]
-    private lateinit var note: Note
-    private var isSupportSwipeBack = true
-    private var _editMode = false
-    private var editMode: Boolean
-    set(value) {
-        _editMode = value
-        binding.freeLayout.editMode = value
-        binding.addPaper.visibility = if (value) View.VISIBLE else View.GONE
-        binding.removePaper.visibility = if (value) View.VISIBLE else View.GONE
-        binding.showRight.visibility = if (value) View.VISIBLE else View.GONE
-        isSupportSwipeBack = true
+    private val appViewModel: GlobalViewModel by lazy {
+        ViewModelProvider(
+            BaseApplication.instance,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+        )[GlobalViewModel::class.java]
     }
-    get() = _editMode
-    private var backgroundColorIdNow = 12
 
-    @SuppressLint("SetTextI18n", "CheckResult")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setTheme(
-            if (intent.getBooleanExtra("editMode", false)) {
-                R.style.DialogActivityTheme
-            }else {
-                R.style.DialogActivityTheme2
+    private var note: Note? = null
+    private var noteId: Long = -1L
+    private var isEditMode: Boolean = false
+    private var currentBackgroundColorId = 12
+
+    private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.extras?.getString(MediaStore.EXTRA_OUTPUT)?.let { photoPath ->
+                binding.freeLayout.addFreeObj(BitmapObject(BitmapUtils.getImageFromPath(photoPath)))
+                binding.addSomethingRoot.isVisible = false
+            } ?: makeToast("Failed to get image path")
+        }
+    }
+
+    private val stickerPickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            try {
+                val data = result.data ?: return@registerForActivityResult
+                val bitmapPath = data.getStringExtra("bitmapPath")
+                val stickerPath = data.getStringExtra("stickerPath")
+
+                val bitmap = when {
+                    !bitmapPath.isNullOrEmpty() -> BitmapUtils.getImageFromPath(bitmapPath)
+                    !stickerPath.isNullOrEmpty() -> BitmapUtils.getImageFromAssetsFile(stickerPath)
+                    else -> null
+                }
+
+                bitmap?.let {
+                    binding.freeLayout.addFreeObj(BitmapObject(it))
+                    binding.addSomethingRoot.isVisible = false
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                makeToast("添加失败")
             }
-        )
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        handleIntentExtras()
+        super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        binding.drawerLayout.setDrawerLockMode(
-            DrawerLayout.LOCK_MODE_LOCKED_CLOSED
-        )
+        setupUI()
+        setupObservers()
+    }
 
-        val noteId = intent.getLongExtra("noteId", -1L)
-        editMode = intent.getBooleanExtra("editMode", false)
+    private fun handleIntentExtras() {
+        noteId = intent.getLongExtra("noteId", -1L)
+        isEditMode = intent.getBooleanExtra("editMode", false)
         val shareMode = intent.getBooleanExtra("share", false)
+
+        setTheme(if (isEditMode) R.style.DialogActivityTheme else R.style.DialogActivityTheme2)
+
         if (noteId == -1L) {
             makeToast("Empty id")
             finish()
             return
         }
 
-        appViewModel.getNoteFromIdLiveData(noteId).observe(this) {
-            try {
-                val isFirstLoad = !::note.isInitialized
-                if (isFirstLoad) {
-                    note = it
-                    loadFreeObj()
-                    binding.freeLayout.addPaper(it.data["pageSize"]!!.toInt())
-                    backgroundColorIdNow = it.data["backgroundColor"]!!.toInt()
-                    binding.backgroundColorRoot.setBackgroundColor(resources.getColor(BaseApplication.idToTextColor[backgroundColorIdNow]!!))
-                }else {
-                    note = it
+        if (shareMode) {
+            appViewModel.getNoteFromIdLiveData(noteId).observe(this) {
+                if (it != null && this.note == null) {
+                    this.note = it
+                    loadNoteContent(it, shareAfterLoad = true)
                 }
-
-                if (shareMode && isFirstLoad) {
-                    shotToShare()
-                }
-            }catch (e: Exception) {
-                e.printStackTrace()
-                makeToast("加载失败")
             }
         }
+    }
 
-        binding.backToEdit.setOnClickListener {
-            finish()
-        }
+    private fun setupUI() {
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        updateUiForEditMode()
+        setupClickListeners()
+        setupSeekBarListeners()
+    }
 
-        binding.complete.setOnClickListener {
-            try {
-                saveFreeObj()
-                thread {
-                    appViewModel.changeNoteDataFromId(noteId, object : ChangeNoteDataCallBack {
-                        override fun doChange(it: Note) {
-                            it.data["pageSize"] = binding.freeLayout.getPaperSize().toString()
-                            it.data["backgroundColor"] = backgroundColorIdNow.toString()
-                        }
-
-                        override fun onChangeSuccessful() {
-//                            editMode = false
-//                            binding.drawerLayout.closeDrawer(GravityCompat.END)
-//                            finish()
-//                            startActivity(intent.apply {
-//                                putExtra("noteId", noteId)
-//                                putExtra("editMode", false)
-//                                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-//                            })
-                            intent.putExtra("editMode", false)
-                            recreate()
-                        }
-
-                        override fun onChangeFailure(e: Exception) {
-                            e.printStackTrace()
-                            makeToast("保存失败")
-                        }
-
-                    })
-                }
-            }catch (e: Exception) {
-                e.printStackTrace()
-                makeToast("保存失败")
+    private fun setupObservers() {
+        appViewModel.getNoteFromIdLiveData(noteId).observe(this) { newNote ->
+            newNote ?: return@observe
+            val isFirstLoad = this.note == null
+            this.note = newNote
+            if (isFirstLoad) {
+                loadNoteContent(newNote)
             }
         }
+    }
 
-        binding.freeLayout.setOnObjFocusListener { freeObject, isFocus ->
-            binding.objPopView.visibility = if (isFocus) View.VISIBLE else View.GONE
+    private fun loadNoteContent(noteToLoad: Note, shareAfterLoad: Boolean = false) {
+        try {
+            loadFreeObjects(noteToLoad.data["noteFolder"])
+            binding.freeLayout.addPaper(noteToLoad.data["pageSize"]?.toInt() ?: 0)
+            currentBackgroundColorId = noteToLoad.data["backgroundColor"]?.toInt() ?: 12
+            val colorRes = BaseApplication.idToTextColor[currentBackgroundColorId] ?: R.color.white
+            binding.backgroundColorRoot.setBackgroundColor(ContextCompat.getColor(this, colorRes))
+            if (shareAfterLoad) {
+                shareNoteAsImage()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            makeToast("加载失败")
+        }
+    }
+
+    private fun updateUiForEditMode() {
+        binding.freeLayout.editMode = isEditMode
+        binding.addPaper.isVisible = isEditMode
+        binding.removePaper.isVisible = isEditMode
+        binding.showRight.isVisible = isEditMode
+    }
+
+    private fun setupClickListeners() {
+        binding.backToEdit.setOnClickListener { finish() }
+        binding.complete.setOnClickListener { saveNoteAndRecreate() }
+        binding.showRight.setOnClickListener { openRightDrawer() }
+
+        binding.freeLayout.setOnObjFocusListener { _, isFocus ->
+            binding.objPopView.isVisible = isFocus
         }
 
+        binding.objAngleLeft.setOnClickListener { binding.freeLayout.getFocusObj()?.rotate(-10f) }
+        binding.objAngleRight.setOnClickListener { binding.freeLayout.getFocusObj()?.rotate(10f) }
+        binding.delObj.setOnClickListener {
+            binding.freeLayout.getFocusObj()?.let { binding.freeLayout.deleteFreeObj(it) }
+            binding.objPopView.isVisible = false
+        }
+
+        binding.addObj.setOnClickListener {
+            binding.addSomethingRoot.isVisible = true
+            binding.drawerLayout.closeDrawer(GravityCompat.END)
+        }
+        binding.addBack.setOnClickListener { binding.addSomethingRoot.isVisible = false }
+        binding.addImage.setOnClickListener { launchImagePicker() }
+        binding.addSticker.setOnClickListener { stickerPickerLauncher.launch(Intent(this, NoteStickerChooser::class.java)) }
+        binding.addText.setOnClickListener {
+            binding.addSomethingRoot.isVisible = false
+            binding.addTextAction.isVisible = true
+        }
+        binding.addBackground.setOnClickListener { showColorBoard(isForBackground = true) }
+
+        binding.addPaper.setOnClickListener { binding.freeLayout.addPaper() }
+        binding.removePaper.setOnClickListener { binding.freeLayout.deletePaper() }
+
+        setupTextPanelListeners()
+    }
+
+    private fun setupTextPanelListeners() {
+        binding.cancelAddText.setOnClickListener { binding.addTextAction.isVisible = false }
+        binding.completeAddText.setOnClickListener { addTextObjectFromInput() }
+
+        binding.textStyleReturn.setOnClickListener {
+            binding.addTextEdit.text?.insert(binding.addTextEdit.selectionStart, "\n")
+        }
+        binding.textStyleBold.setOnClickListener {
+            it.isSelected = !it.isSelected
+            binding.addTextEdit.paint.isFakeBoldText = it.isSelected
+        }
+        binding.textStyleItalic.setOnClickListener {
+            it.isSelected = !it.isSelected
+            binding.addTextEdit.paint.textSkewX = if (it.isSelected) -0.2f else 0f
+        }
+        binding.textStyleUnderline.setOnClickListener {
+            it.isSelected = !it.isSelected
+            binding.addTextEdit.paint.isUnderlineText = it.isSelected
+        }
+        binding.textStyleStrikethrough.setOnClickListener {
+            it.isSelected = !it.isSelected
+            binding.addTextEdit.paint.isStrikeThruText = it.isSelected
+        }
+        binding.textStyleChangeColor.setOnClickListener { showColorBoard(isForBackground = false) }
+    }
+
+    private fun addTextObjectFromInput() {
+        val text = binding.addTextEdit.text.toString()
+        if (text.isNotEmpty()) {
+            binding.freeLayout.addFreeObj(TextObject(text, binding.addTextEdit.paint))
+            resetTextCreationPanel()
+        } else {
+            makeToast("文字不能为空")
+        }
+    }
+
+    private fun resetTextCreationPanel() {
+        binding.addTextAction.isVisible = false
+        binding.addTextEdit.text.clear()
+        binding.addTextEdit.paint.apply {
+            isFakeBoldText = false
+            textSkewX = 0f
+            isUnderlineText = false
+            isStrikeThruText = false
+            color = ContextCompat.getColor(this@FreeMakeNote, R.color.black)
+        }
+        binding.textStyleBold.isSelected = false
+        binding.textStyleItalic.isSelected = false
+        binding.textStyleUnderline.isSelected = false
+        binding.textStyleStrikethrough.isSelected = false
+    }
+
+    private fun setupSeekBarListeners() {
         binding.objSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                if(fromUser){
-                    try {
-                        val focusObj = binding.freeLayout.getFocusObj()
-                        if (focusObj != null) {
-                            val imageTemp = focusObj.srcBitmap.width
-                            val values = FloatArray(9)
-                            focusObj.mMatrix.getValues(values)
-                            val nowWidth = imageTemp * values[0]
-                            val scaleValue = (progress.toFloat() + 50) / nowWidth
-                            focusObj.scale(scaleValue, scaleValue)
-                            binding.freeLayout.invalidate()
-                        }
-                    }catch (e:Exception){
-                        e.printStackTrace()
+                if (!fromUser) return
+                binding.freeLayout.getFocusObj()?.let { obj ->
+                    val values = FloatArray(9).apply { obj.mMatrix.getValues(this) }
+                    val currentWidth = obj.srcBitmap.width * values[0]
+                    if (currentWidth > 0) {
+                        val scaleValue = (progress.toFloat() + 50) / currentWidth
+                        obj.scale(scaleValue, scaleValue)
                     }
                 }
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
+    }
 
-        binding.objAngleLeft.setOnClickListener {
-            try{
-                val focusObj = binding.freeLayout.getFocusObj()
-                focusObj?.rotate(-10f)
-                binding.freeLayout.invalidate()
-            }catch (_:Exception){}
-        }
-
-        binding.objAngleRight.setOnClickListener {
-            try{
-                val focusObj = binding.freeLayout.getFocusObj()
-                focusObj?.rotate(10f)
-                binding.freeLayout.invalidate()
-            }catch (_:Exception){}
-        }
-
-        binding.delObj.setOnClickListener {
-            val focus = binding.freeLayout.getFocusObj()
-            focus?.let {
-                binding.freeLayout.deleteFreeObj(it)
+    private fun showColorBoard(isForBackground: Boolean) {
+        binding.colorsBoard.isVisible = true
+        (binding.colorsBoard.getChildAt(0) as ViewGroup).children.forEachIndexed { index, view ->
+            view.setOnClickListener {
+                val colorId = index + 1
+                val color = ContextCompat.getColor(this, BaseApplication.idToTextColor[colorId]!!)
+                if (isForBackground) {
+                    binding.backgroundColorRoot.setBackgroundColor(color)
+                    currentBackgroundColorId = colorId
+                    binding.addSomethingRoot.isVisible = false
+                } else {
+                    binding.addTextEdit.setTextColor(color)
+                    binding.addTextEdit.paint.color = color
+                }
+                binding.colorsBoard.isVisible = false
             }
-            binding.objPopView.visibility = View.GONE
         }
+    }
 
-        binding.showRight.setOnClickListener {
-            onRightViewPop()
-        }
-
-        binding.addObj.setOnClickListener {
-            binding.addSomethingRoot.visibility = View.VISIBLE
-            binding.drawerLayout.closeDrawer(GravityCompat.END)
-        }
-
-        binding.addBack.setOnClickListener {
-            binding.addSomethingRoot.visibility = View.GONE
-        }
-
-        binding.addText.setOnClickListener {
-            binding.addSomethingRoot.visibility = View.GONE
-            binding.addTextAction.visibility = View.VISIBLE
-        }
-
-        binding.addImage.setOnClickListener {
-            requestPermission(object : PermissionRequestCallBack {
-                override fun onAllGranted() {
-                    val intent = Intent()
-                    intent.action = Intent.ACTION_GET_CONTENT
-                    intent.type = "image/*"
-                    intent.putExtra("com.xtc.camera.LEFT_BUTTON_TEXT", "关闭")
-                    intent.putExtra("com.xtc.camera.RIGHT_BUTTON_TEXT", "选择")
-                    RxActivityResult.on(this@FreeMakeNote).startIntent(intent).subscribe(object :
-                        Observer<Result<FreeMakeNote>> {
-                        override fun onSubscribe(d: Disposable) {}
-                        override fun onNext(data: Result<FreeMakeNote>) {
-                            if (data.resultCode() == Activity.RESULT_OK) {
-                                val bundle: Bundle? = data.data().extras
-                                if (bundle != null) {
-                                    val photoPath: String = bundle.getString(MediaStore.EXTRA_OUTPUT, null)
-                                    binding.freeLayout.addFreeObj(
-                                        BitmapObject(
-                                            BitmapUtils.getImageFromPath(photoPath)
-                                        )
-                                    )
-                                    binding.addSomethingRoot.visibility = View.GONE
-                                }
-                            }
-                        }
-                        override fun onError(e: Throwable) {
-                            e.printStackTrace()
-                            makeToast("当前机型不支持")
-                        }
-
-                        override fun onComplete() {}
-                    })
-                }
-                override fun onCancel() {
-
-                }
-            })
-        }
-
-        binding.textStyleReturn.setOnClickListener {
+    private fun saveNoteAndRecreate() {
+        val currentNote = note ?: return
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val lastSel = binding.addTextEdit.selectionStart
-                if (binding.addTextEdit.length() != lastSel) binding.addTextEdit.setText(
-                    binding.addTextEdit.text.subSequence(0, lastSel).toString()
-                            + "\n"
-                            + binding.addTextEdit.text.subSequence(lastSel, binding.addTextEdit.length()).toString()
-                )else binding.addTextEdit.setText(binding.addTextEdit.text.toString() + "\n")
-                binding.addTextEdit.setSelection(lastSel+1)
-            }catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-        var isBold = false
-        var isItalic = false
-        var isUnderLine = false
-        var isStrikethrough = false
-
-        binding.textStyleBold.setOnClickListener {
-            isBold = !isBold
-            binding.addTextEdit.paint.isFakeBoldText = isBold
-            binding.addTextEdit.invalidate()
-        }
-
-        binding.textStyleItalic.setOnClickListener {
-            isItalic = !isItalic
-            binding.addTextEdit.paint.textSkewX = if (isItalic) -0.2f else 0f
-            binding.addTextEdit.invalidate()
-        }
-
-        binding.textStyleUnderline.setOnClickListener {
-            isUnderLine = !isUnderLine
-            binding.addTextEdit.paint.isUnderlineText = isUnderLine
-            binding.addTextEdit.invalidate()
-        }
-
-        binding.textStyleStrikethrough.setOnClickListener {
-            isStrikethrough = !isStrikethrough
-            binding.addTextEdit.paint.isStrikeThruText = isStrikethrough
-            binding.addTextEdit.invalidate()
-        }
-
-        binding.textStyleChangeColor.setOnClickListener {
-            binding.colorsBoard.visibility = View.VISIBLE
-            val allChild = getAllChildViews(binding.colorsBoard)
-            for (i in 1..allChild.size) {
-                allChild[i - 1].setOnClickListener {
-                    val mColor = ContextCompat.getColor(this, BaseApplication.idToTextColor[i]!!)
-                    binding.addTextEdit.setTextColor(mColor)
-                    binding.addTextEdit.invalidate()
-                    binding.addTextEdit.paint.color = mColor
-                    binding.colorsBoard.visibility = View.GONE
+                val dirPath = currentNote.data["noteFolder"]!!
+                val objSaveList = binding.freeLayout.getAllObj().map { obj ->
+                    val matrixValues = FloatArray(9).apply { obj.mMatrix.getValues(this) }
+                    Pair(BitmapUtils.bitmapToString(obj.srcBitmap), matrixValues)
                 }
-            }
-        }
+                val saveModel = ObjectSaveModel(ArrayList(objSaveList))
+                FileUtils.writeTxtToFile(saveModel.toGson(), dirPath, "free_obj.json")
 
-        binding.completeAddText.setOnClickListener {
-            if (binding.addTextEdit.text.isNotEmpty()) {
-                binding.addTextAction.visibility = View.GONE
-                Log.d("FreeMakeNote", "Text = ${binding.addTextEdit.text}")
-                binding.freeLayout.addFreeObj(
-                    TextObject(binding.addTextEdit.text.toString(), binding.addTextEdit.paint)
-                )
-                binding.addTextEdit.paint.isFakeBoldText = false
-                binding.addTextEdit.paint.textSkewX = 0f
-                binding.addTextEdit.paint.isUnderlineText = false
-                binding.addTextEdit.paint.isStrikeThruText = false
-                binding.addTextEdit.paint.color = resources.getColor(R.color.black)
-                binding.addTextEdit.setText("")
-            }else {
-                makeToast("文字不能为空")
-            }
-        }
+                appViewModel.changeNoteDataFromId(noteId, object : ChangeNoteDataCallBack {
+                    override fun doChange(it: Note) {
+                        it.data["pageSize"] = binding.freeLayout.getPaperSize().toString()
+                        it.data["backgroundColor"] = currentBackgroundColorId.toString()
+                    }
 
-        binding.cancelAddText.setOnClickListener {
-            binding.addTextAction.visibility = View.GONE
-        }
+                    override fun onChangeSuccessful() {
+                        intent.putExtra("editMode", false)
+                        recreate()
+                    }
 
-        binding.addSticker.setOnClickListener {
-            RxActivityResult.on(this).startIntent(Intent(this, NoteStickerChooser::class.java)).subscribe {
-                if(it.resultCode() == RESULT_OK){
-                    try{
-                        val urlBitmap = it.data().getStringExtra("bitmapPath") ?: ""
-                        val bitmap = if (urlBitmap.isNotEmpty())  {
-                            BitmapUtils.getImageFromPath(urlBitmap)
-                        }else {
-                            BitmapUtils.getImageFromAssetsFile(it.data().getStringExtra("stickerPath")!!)
-                        }
-                        val sticker = BitmapObject(bitmap)
-                        binding.freeLayout.addFreeObj(sticker)
-                        binding.addSomethingRoot.visibility = View.GONE
-                    }catch (e:Exception){
-                        makeToast("添加失败")
+                    override fun onChangeFailure(e: Exception) {
                         e.printStackTrace()
+                        makeToast("保存失败")
+                    }
+                })
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) { makeToast("保存失败") }
+            }
+        }
+    }
+
+    private fun loadFreeObjects(dirPath: String?) {
+        dirPath ?: return
+        lifecycleScope.launch(Dispatchers.IO) {
+            val filePath = "$dirPath/free_obj.json"
+            if (!FileUtils.exists(filePath)) {
+                showEmptyNoteToast(); return@launch
+            }
+
+            val content = FileUtils.readTxtFile(filePath)
+            if (content.isNullOrBlank()) {
+                showEmptyNoteToast(); return@launch
+            }
+
+            val model = Gson().fromJson(content, ObjectSaveModel::class.java)
+            withContext(Dispatchers.Main) {
+                binding.freeLayout.clear()
+                if (model.objList.isEmpty()) {
+                    showEmptyNoteToast()
+                } else {
+                    model.objList.forEach { objData ->
+                        BitmapObject(BitmapUtils.stringToBitmap(objData.first)).apply {
+                            mMatrix.setValues(objData.second)
+                            updatePoints()
+                            binding.freeLayout.addFreeObj(this)
+                        }
                     }
                 }
             }
         }
+    }
 
-        binding.addPaper.setOnClickListener {
-            binding.freeLayout.addPaper()
-        }
-
-        binding.removePaper.setOnClickListener {
-            binding.freeLayout.deletePaper()
-        }
-
-        binding.addBackground.setOnClickListener {
-            binding.colorsBoard.visibility = View.VISIBLE
-            val allChild = getAllChildViews(binding.colorsBoard)
-            for (i in 1..allChild.size) {
-                allChild[i - 1].setOnClickListener {
-                    val mColor = ContextCompat.getColor(this, BaseApplication.idToTextColor[i]!!)
-                    binding.backgroundColorRoot.setBackgroundColor(mColor)
-                    binding.colorsBoard.visibility = View.GONE
-                    binding.addSomethingRoot.visibility = View.GONE
-                    backgroundColorIdNow = i
-                }
-            }
+    private suspend fun showEmptyNoteToast() {
+        if (!isEditMode) {
+            withContext(Dispatchers.Main) { makeToast("这篇手帐是空的") }
         }
     }
 
-    private fun getAllChildViews(view: View): List<View> {
-        val allChildViews: MutableList<View> = ArrayList()
-        if (view is ViewGroup) {
-            for (i in 0 until view.childCount) {
-                val viewChild = view.getChildAt(i) as ViewGroup
-                allChildViews.add(viewChild.getChildAt(0))
-                allChildViews.add(viewChild.getChildAt(1))
-                allChildViews.add(viewChild.getChildAt(2))
-            }
-        }
-        return allChildViews
-    }
-
-    private fun saveFreeObj() {
-        if (!::note.isInitialized) throw RuntimeException("Note is empty")
-        val dirPath = note.data["noteFolder"]!!
-        val fileName = "free_obj.json"
-        val allObj = binding.freeLayout.getAllObj()
-        val objSaveList = ArrayList<Pair<String, FloatArray>>()
-        allObj.forEach { obj ->
-            val fl = FloatArray(10)
-            obj.mMatrix.getValues(fl)
-            val mp = Pair(
-                BitmapUtils.bitmapToString(obj.srcBitmap),
-                fl
-            )
-            objSaveList.add(mp)
-        }
-        val saveModel = ObjectSaveModel(objSaveList)
-        val stringCen = saveModel.toGson()
-        FileUtils.deleteFile(dirPath + fileName)
-        FileUtils.writeTxtToFile(stringCen, dirPath, fileName)
-    }
-
-    private fun loadFreeObj() {
-        if (!::note.isInitialized) throw RuntimeException("Note is empty")
-        val dirPath = note.data["noteFolder"]!!
-        val fileName = "free_obj.json"
-        val emptyNote = fun() {
-            if (!editMode) {
-                makeToast("这篇手帐是空的")
-            }
-        }
-        if (FileUtils.exists(dirPath + fileName)) {
-            binding.freeLayout.clear()
-            val stringCen = FileUtils.readTxtFile(dirPath + fileName)
-            val model = Gson().fromJson(stringCen, ObjectSaveModel::class.java)
-            model.objList.forEach { obj ->
-                val bitmap = BitmapUtils.stringToBitmap(obj.first)
-                val matrix = obj.second
-                val newObj = BitmapObject(bitmap)
-                newObj.mMatrix.setValues(matrix)
-                newObj.updatePoints()
-                binding.freeLayout.addFreeObj(newObj)
-            }
-            if (model.objList.isEmpty()) {
-                emptyNote()
-            }
-        }else {
-            emptyNote()
-        }
-    }
-
-    private fun requestPermission(func: PermissionRequestCallBack) {
+    private fun launchImagePicker() {
         PermissionX.init(this)
-            .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+            .permissions(Manifest.permission.READ_EXTERNAL_STORAGE)
             .request { allGranted, _, _ ->
                 if (allGranted) {
-                    Log.d("FreeMakeNote", "All permissions Granted")
-                    func.onAllGranted()
-                }else {
-                    func.onCancel()
+                    val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                        type = "image/*"
+                        putExtra("com.xtc.camera.LEFT_BUTTON_TEXT", "关闭")
+                        putExtra("com.xtc.camera.RIGHT_BUTTON_TEXT", "选择")
+                    }
+                    imagePickerLauncher.launch(intent)
+                } else {
+                    makeToast("Permission denied")
                 }
             }
     }
 
-    private fun onRightViewPop() {
-        try{
-            val bitmap: Bitmap = BitmapUtils.rsBlur(BitmapUtils.viewConversionBitmap(binding.drawerLayout), 8)
-            val bitmap1 = Bitmap.createBitmap(bitmap, 320 - DisplayUtil.dip2px(55f), 0, DisplayUtil.dip2px(55f), 360)
-            binding.popbk.setImageBitmap(
-                BitmapFilletUtils.fillet(bitmap1,
-                    DisplayUtil.dip2px(15f), BitmapFilletUtils.CORNER_LEFT))
-            bitmap.recycle()
-            bitmap1.recycle()
+    private fun openRightDrawer() {
+        try {
+            val viewBitmap = BitmapUtils.viewConversionBitmap(binding.drawerLayout)
+            val blurredBitmap = BitmapUtils.rsBlur(viewBitmap, 8)
+            val croppedBitmap = Bitmap.createBitmap(
+                blurredBitmap,
+                binding.drawerLayout.width - DisplayUtil.dip2px(55f), 0,
+                DisplayUtil.dip2px(55f), binding.drawerLayout.height
+            )
+            val finalBitmap = BitmapFilletUtils.fillet(
+                croppedBitmap, DisplayUtil.dip2px(15f), BitmapFilletUtils.CORNER_LEFT
+            )
+
+            binding.popbk.setImageBitmap(finalBitmap)
+            viewBitmap.recycle()
+            blurredBitmap.recycle()
 
             binding.drawerLayout.openDrawer(GravityCompat.END)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun shotToShare() {
+    private fun shareNoteAsImage() {
         binding.viewToShot.postDelayed({
-            try{
+            try {
                 val shareImage = BitmapUtils.viewConversionBitmap(binding.viewToShot)
-                //第一步：创建XTCImageObject 对象，并设置bitmap属性为要分享的图片
-                val xtcImageObject = XTCImageObject()
-                xtcImageObject.setBitmap(shareImage);
-                //如果图片在公共目录，可以直接设置图片路径即可
-                //第二步：创建XTCShareMessage对象，并将shareObject属性设置为xtcTextObject对象
-                val xtcShareMessage = XTCShareMessage();
-                xtcShareMessage.shareObject = xtcImageObject;
-                //第三步：创建SendMessageToXTC.Request对象，并设置message属性为xtcShareMessage
-                val request = SendMessageToXTC.Request();
-                request.message = xtcShareMessage;
-                request.flag = 1
-                //第四步：创建ShareMessageManager对象，调用sendRequestToXTC方法，传入SendMessageToXTC.Request对象和AppKey
-                ShareMessageManager(this).sendRequestToXTC(request, BaseApplication.APP_ID);
-            }catch (e:Exception){
+                val xtcImageObject = XTCImageObject().apply { setBitmap(shareImage) }
+                val xtcShareMessage = XTCShareMessage().apply { shareObject = xtcImageObject }
+                val request = SendMessageToXTC.Request().apply {
+                    message = xtcShareMessage
+                    flag = 1
+                }
+                ShareMessageManager(this).sendRequestToXTC(request, BaseApplication.APP_ID)
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }, 800)
-    }
-
-    interface PermissionRequestCallBack {
-        fun onAllGranted()
-        fun onCancel()
     }
 }

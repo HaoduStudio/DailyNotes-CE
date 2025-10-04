@@ -4,14 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.haodustudio.DailyNotes.BaseApplication
-import com.haodustudio.DailyNotes.R
 import com.haodustudio.DailyNotes.databinding.ActivityNoteViewerBinding
 import com.haodustudio.DailyNotes.helper.*
 import com.haodustudio.DailyNotes.model.listener.ChangeNoteDataCallBack
@@ -30,18 +29,21 @@ import com.xtc.shareapi.share.communication.SendMessageToXTC
 import com.xtc.shareapi.share.manager.ShareMessageManager
 import com.xtc.shareapi.share.shareobject.XTCImageObject
 import com.xtc.shareapi.share.shareobject.XTCShareMessage
-import rx_activity_result2.RxActivityResult
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
-import kotlin.concurrent.thread
-
 
 class NoteViewer : BaseActivity() {
 
     private val binding by lazy { ActivityNoteViewerBinding.inflate(layoutInflater) }
-    private val appViewModel = ViewModelProvider(
-        BaseApplication.instance,
-        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
-    )[GlobalViewModel::class.java]
+    private val appViewModel by lazy {
+        ViewModelProvider(
+            BaseApplication.instance,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+        )[GlobalViewModel::class.java]
+    }
     private lateinit var noteData: Note
 
     private lateinit var imageAdapter: ImageAdapter
@@ -49,154 +51,93 @@ class NoteViewer : BaseActivity() {
     private lateinit var recordAdapter: RecordAdapter
     private val recordList = ArrayList<RecordAdapter.RecordItem>()
 
-    private var _editing = false
-    private var isEditing: Boolean
-        get() = _editing
+    private var isEditing: Boolean = false
         set(value) {
-            _editing = value
-            val viewToChange = arrayListOf(
-                binding.tmpLine1,
-                binding.tmpLine2,
-                binding.complete,
-                binding.editTemplate,
-                binding.editMood,
-                binding.editBodyText,
-                binding.mediaBar,
-                binding.addMedia,
-            )
-            if (value) {
-                viewToChange.forEach {
-                    it.visibility = View.VISIBLE
-                }
-            }else {
-                viewToChange.forEach {
-                    it.visibility = View.GONE
-                }
-            }
-            if (value) {
-                binding.stickerLayout.visibility = View.GONE
-            }else {
-                binding.stickerLayout.visibility = View.VISIBLE
-            }
+            field = value
+            binding.editModeControls.visibility = if (value) View.VISIBLE else View.GONE
+            binding.stickerLayout.visibility = if (value) View.GONE else View.VISIBLE
         }
 
-    @SuppressLint("CheckResult")
+    private val addStickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            Log.d("NoteViewer", "Reload Sticker")
+            binding.stickerLayout.visibility = View.VISIBLE
+            loadSticker()
+            binding.stickerLayout.cleanAllFocus()
+        } else {
+            isEditing = true
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        binding.stickerLayout.removeAllSticker()
         binding.stickerLayout.setCanEdit(false)
 
-        val idData = intent.getLongExtra("noteId", -1L)
+        val noteId = intent.getLongExtra("noteId", -1L)
         val shareMode = intent.getBooleanExtra("share", false)
         isEditing = intent.getBooleanExtra("editMode", false)
-        if (idData == -1L) {
+
+        if (noteId == -1L) {
             makeToast("Empty id")
             finish()
-        }else {
-            appViewModel.getNoteFromIdLiveData(idData).observe(this) {
-                Log.d("NoteViewer", it.toString())
-                if (!::noteData.isInitialized) {
-                    try {
-                        updateMood(it.mood)
-                        updateBackground(it.data["template"]!!.toPair())
-                        updateTextColor(it.data["textColor"]!!)
-                        updateBodyText(it.data["body"]!!)
-                        updateTittle(it.yy, it.mm, it.dd)
-                        updateImage(it.data["imagePaths"]!!.toArray(), it.data["videoPaths"]!!.toArray())
-                        updateRecord(it.data["recordPaths"]!!.toArray())
-                        loadSticker(it)
-
-                        if (shareMode) {
-                            imageAdapter.setOnAllDoneListener {
-                                try {
-                                    shotToShare()
-                                }catch (e: Exception) {
-                                    runOnUiThread { makeToast("Shared failure") }
-                                    e.printStackTrace()
-                                }
-                            }
-                        }
-                    }catch (e: Exception) {
-                        makeToast("First Load Failure")
-                        e.printStackTrace()
-                    }
-                }else {
-                    try {
-                        if (noteData.mood != it.mood) {
-                            updateMood(it.mood)
-                        }
-                        if (noteData.data["template"]!! != it.data["template"]!!) {
-                            updateBackground(it.data["template"]!!.toPair())
-                        }
-                        if (noteData.data["textColor"]!! != it.data["textColor"]) {
-                            updateTextColor(it.data["textColor"]!!)
-                        }
-                        if (noteData.data["body"]!! != it.data["body"]!!) {
-                            updateBodyText(it.data["body"]!!)
-                        }
-                        if (noteData.data["recordPaths"]!! != it.data["recordPaths"]!!) {
-                            updateRecord(it.data["recordPaths"]!!.toArray())
-                        }
-                        if (noteData.data["imagePaths"]!! != it.data["imagePaths"]!! ||
-                            noteData.data["videoPaths"]!! != it.data["videoPaths"]!!) {
-                            updateImage(it.data["imagePaths"]!!.toArray(), it.data["videoPaths"]!!.toArray())
-                        }
-                    }catch (e: Exception) {
-                        makeToast("Update Failure")
-                        e.printStackTrace()
-                    }
-                }
-                noteData = it
-            }
+            return
         }
 
-        binding.addMedia.setOnClickListener {
-            val mIntent = Intent(this, NoteAddMedia::class.java)
-            mIntent.putExtra("noteId", noteData.id)
-            startActivity(mIntent)
+        appViewModel.getNoteFromIdLiveData(noteId).observe(this) { updatedNote ->
+            noteData = updatedNote
+            updateUI(updatedNote, shareMode)
         }
 
-        binding.editBodyText.setOnClickListener {
-            val mIntent = Intent(this, NoteEditBody::class.java)
-            mIntent.putExtra("noteId", noteData.id)
-            startActivity(mIntent)
-        }
+        setupListeners()
+    }
 
-        binding.editMood.setOnClickListener {
-            val mIntent = Intent(this, NoteChangeMood::class.java)
-            mIntent.putExtra("noteId", noteData.id)
-            startActivity(mIntent)
-        }
+    private fun updateUI(note: Note, shareMode: Boolean) {
+        try {
+            updateTittle(note.yy, note.mm, note.dd)
+            updateMood(note.mood)
+            updateBackground(note.data["template"]!!.toPair())
+            updateTextColor(note.data["textColor"]!!)
+            updateBodyText(note.data["body"]!!)
+            updateImage(note.data["imagePaths"]!!.toArray(), note.data["videoPaths"]!!.toArray())
+            updateRecord(note.data["recordPaths"]!!.toArray())
+            loadSticker(note)
 
-        binding.editTemplate.setOnClickListener {
-            val mIntent = Intent(this, NoteChangeTemplate::class.java)
-            mIntent.putExtra("noteId", noteData.id)
-            startActivity(mIntent)
-        }
-
-        binding.complete.setOnClickListener {
-            Log.d("NoteViewer", "Complete note")
-            isEditing = false
-            binding.stickerLayout.visibility = View.GONE
-            thread {
-                Thread.sleep(500)
-                val bitmap = BitmapUtils.viewConversionBitmap(binding.viewForShot)
-                FileUtils.saveBitmap(File(cacheDir, "tempNoteShot.jpg").absolutePath, bitmap)
-                val mIntent = Intent(this, NoteAddSticker::class.java)
-                mIntent.putExtra("noteId", noteData.id)
-                RxActivityResult.on(this).startIntent(mIntent).subscribe {
-                    if (it.resultCode() == RESULT_OK) {
-                        Log.d("NoteViewer", "Reload Sticker")
-                        binding.stickerLayout.visibility = View.VISIBLE
-                        loadSticker()
-                        binding.stickerLayout.cleanAllFocus()
-                    }else {
-                        isEditing = true
-                    }
+            if (shareMode) {
+                imageAdapter.setOnAllDoneListener {
+                    shotToShare()
                 }
             }
+        } catch (e: Exception) {
+            makeToast("Failed to load note data")
+            e.printStackTrace()
+        }
+    }
+
+    private fun setupListeners() {
+        binding.addMedia.setOnClickListener { navigateTo(NoteAddMedia::class.java) }
+        binding.editBodyText.setOnClickListener { navigateTo(NoteEditBody::class.java) }
+        binding.editMood.setOnClickListener { navigateTo(NoteChangeMood::class.java) }
+        binding.editTemplate.setOnClickListener { navigateTo(NoteChangeTemplate::class.java) }
+        binding.editStickersButton.setOnClickListener { launchStickerEditor() }
+    }
+
+    private fun navigateTo(activityClass: Class<*>) {
+        if (!::noteData.isInitialized) return
+        val intent = Intent(this, activityClass).putExtra("noteId", noteData.id)
+        startActivity(intent)
+    }
+
+    private fun launchStickerEditor() {
+        isEditing = false
+        lifecycleScope.launch {
+            delay(500)
+            val bitmap = BitmapUtils.viewConversionBitmap(binding.viewForShot)
+            FileUtils.saveBitmap(File(cacheDir, "tempNoteShot.jpg").absolutePath, bitmap)
+            val intent = Intent(this@NoteViewer, NoteAddSticker::class.java)
+            intent.putExtra("noteId", noteData.id)
+            addStickerLauncher.launch(intent)
         }
     }
 
@@ -208,37 +149,24 @@ class NoteViewer : BaseActivity() {
                 layoutManager = FixLinearLayoutManager(this@NoteViewer)
                 adapter = recordAdapter
             }
-            recordAdapter.setOnItemClickListener { view, i ->
-                val mRecord = recordList[i]
-                val mIntent = Intent(this, PlayRecord::class.java)
-                mIntent.putExtra("path", mRecord.path)
-                startActivity(mIntent)
+            recordAdapter.setOnItemClickListener { _, i ->
+                startActivity(Intent(this, PlayRecord::class.java).putExtra("path", recordList[i].path))
             }
-            recordAdapter.setOnItemLongClickListener { view, i ->
-                if (::noteData.isInitialized && isEditing) {
-                    val mRecord = recordList[i]
-                    DeleteSafeCheck.check(this) { del ->
-                        if (del) {
-                            removeRecord(mRecord.path)
-                        }
+            recordAdapter.setOnItemLongClickListener { _, i ->
+                if (isEditing) {
+                    DeleteSafeCheck.check(this) { confirmed ->
+                        if (confirmed) removeItemFromNote(recordList[i].path, "recordPaths")
                     }
                 }
-                null
+                true
             }
         }
-
         recordList.clear()
-        pathList.forEach {
-            recordList.add(RecordAdapter.RecordItem(it))
-        }
-        recordList.sortBy {
-            File(it.path).nameWithoutExtension.safeToLong()
-        }
+        pathList.forEach { recordList.add(RecordAdapter.RecordItem(it)) }
+        recordList.sortBy { File(it.path).nameWithoutExtension.safeToLong() }
         recordAdapter.notifyDataSetChanged()
     }
 
-    // "imagePaths" (Gson p)
-    // "videoPaths" (Gson p)
     @SuppressLint("NotifyDataSetChanged")
     private fun updateImage(imagePath: ArrayList<String>, videoPath: ArrayList<String>) {
         if (!::imageAdapter.isInitialized) {
@@ -247,110 +175,47 @@ class NoteViewer : BaseActivity() {
                 layoutManager = FixLinearLayoutManager(this@NoteViewer)
                 adapter = imageAdapter
             }
-
-            imageAdapter.setOnItemClickListener { view, i ->
-                val image = imageList[i]
-                val mIntent = Intent(this, ViewImage::class.java)
-                mIntent.putExtra("isVideo", image.isVideo)
-                mIntent.putExtra("path", image.path)
-                startActivity(mIntent)
+            imageAdapter.setOnItemClickListener { _, i ->
+                val item = imageList[i]
+                startActivity(Intent(this, ViewImage::class.java).apply {
+                    putExtra("isVideo", item.isVideo)
+                    putExtra("path", item.path)
+                })
             }
-
-            imageAdapter.setOnItemLongClickListener { view, i ->
-                if (::noteData.isInitialized && isEditing) {
-                    val mPhoto = imageList[i]
-                    DeleteSafeCheck.check(this) { del ->
-                        if (del) {
-                            if (mPhoto.isVideo) {
-                                removeVideo(mPhoto.path)
-                            }else {
-                                removeImage(mPhoto.path)
-                            }
+            imageAdapter.setOnItemLongClickListener { _, i ->
+                if (isEditing) {
+                    val item = imageList[i]
+                    DeleteSafeCheck.check(this) { confirmed ->
+                        if (confirmed) {
+                            val key = if (item.isVideo) "videoPaths" else "imagePaths"
+                            removeItemFromNote(item.path, key)
                         }
                     }
                 }
-                null
+                true
             }
         }
-
         imageList.clear()
-        imageList.addAll(
-            imagePath.sortedBy {
-                it.safeToLong()
-            }.toMutableList().map {
-                ImageAdapter.ImageItem(it, false)
-            }
-        )
-        imageList.addAll(
-            videoPath.sortedBy {
-                it.safeToLong()
-            }.toMutableList().map {
-                ImageAdapter.ImageItem(it, true)
-            }
-        )
+        imagePath.sortedBy { it.safeToLong() }.mapTo(imageList) { ImageAdapter.ImageItem(it, false) }
+        videoPath.sortedBy { it.safeToLong() }.mapTo(imageList) { ImageAdapter.ImageItem(it, true) }
         imageAdapter.notifyDataSetChanged()
     }
 
-    private fun removeRecord(path: String) {
-        thread {
+    private fun removeItemFromNote(path: String, propertyKey: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
             appViewModel.changeNoteDataFromId(noteData.id, object : ChangeNoteDataCallBack {
                 override fun doChange(it: Note) {
-                    it.data["recordPaths"] = it.data["recordPaths"]!!.toArray<String>().let {
-                        it.remove(path)
-                        it.toGson()
-                    }
+                    val updatedList = it.data[propertyKey]!!.toArray<String>().apply { remove(path) }
+                    it.data[propertyKey] = updatedList.toGson()
                 }
-
-                override fun onChangeSuccessful() {}
+                override fun onChangeSuccessful() {
+                    FileUtils.delete(path)
+                }
                 override fun onChangeFailure(e: Exception) {
                     e.printStackTrace()
-                    makeToast("Deleted failure")
+                    lifecycleScope.launch(Dispatchers.Main) { makeToast("Deleted failure") }
                 }
-
             })
-            FileUtils.delete(path)
-        }
-    }
-
-    private fun removeVideo(path: String) {
-        thread {
-            appViewModel.changeNoteDataFromId(noteData.id, object : ChangeNoteDataCallBack {
-                override fun doChange(it: Note) {
-                    it.data["videoPaths"] = it.data["videoPaths"]!!.toArray<String>().let {
-                        it.remove(path)
-                        it.toGson()
-                    }
-                }
-
-                override fun onChangeSuccessful() {}
-                override fun onChangeFailure(e: Exception) {
-                    e.printStackTrace()
-                    makeToast("Deleted failure")
-                }
-
-            })
-            FileUtils.delete(path)
-        }
-    }
-
-    private fun removeImage(path: String) {
-        thread {
-            appViewModel.changeNoteDataFromId(noteData.id, object : ChangeNoteDataCallBack {
-                override fun doChange(it: Note) {
-                    it.data["imagePaths"] = it.data["imagePaths"]!!.toArray<String>().let {
-                        it.remove(path)
-                        it.toGson()
-                    }
-                }
-
-                override fun onChangeSuccessful() {}
-                override fun onChangeFailure(e: Exception) {
-                    e.printStackTrace()
-                    makeToast("Deleted failure")
-                }
-
-            })
-            FileUtils.delete(path)
         }
     }
 
@@ -362,7 +227,7 @@ class NoteViewer : BaseActivity() {
 
     private fun updateMood(mood: Pair<Int, String>) {
         Glide.with(this)
-            .load(BitmapUtils.getImageFromAssetsFile(BaseApplication.ASSETS_MOOD_PATH + mood.first + ".png"))
+            .load(BitmapUtils.getImageFromAssetsFile("${BaseApplication.ASSETS_MOOD_PATH}${mood.first}.png"))
             .into(binding.moodImage)
         binding.moodText.text = mood.second
     }
@@ -370,16 +235,15 @@ class NoteViewer : BaseActivity() {
     private fun updateBackground(tmp: Pair<Boolean, String>) {
         val bitmap: Bitmap = if (tmp.first) {
             BitmapUtils.getImageFromPath(tmp.second)
-        }else {
-            BitmapUtils.getImageFromAssetsFile(BaseApplication.ASSETS_TEMPLATE_PATH + "${tmp.second}.9.png")
+        } else {
+            BitmapUtils.getImageFromAssetsFile("${BaseApplication.ASSETS_TEMPLATE_PATH}${tmp.second}.9.png")
         }
-        val ninePatch = NinePatchChunk.create9PatchDrawable(this, bitmap, "background")
-        binding.templateBackground.background = ninePatch
+        binding.templateBackground.background = NinePatchChunk.create9PatchDrawable(this, bitmap, "background")
     }
 
     private fun updateTextColor(colorId: String) {
         BaseApplication.idToTextColor[colorId.toInt()]?.let {
-            binding.bodyText.setTextColor(resources.getColor(it))
+            binding.bodyText.setTextColor(getColor(it))
         }
     }
 
@@ -390,32 +254,28 @@ class NoteViewer : BaseActivity() {
     private fun loadSticker(note: Note = noteData) {
         try {
             NoteUtils.loadSticker(binding.stickerLayout, note)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
             makeToast("View sticker failure")
         }
     }
 
     private fun shotToShare() {
-        binding.viewForShot.postDelayed({
-            try{
+        lifecycleScope.launch {
+            delay(800)
+            try {
                 val shareImage = BitmapUtils.viewConversionBitmap(binding.viewForShot)
-                //第一步：创建XTCImageObject 对象，并设置bitmap属性为要分享的图片
-                val xtcImageObject = XTCImageObject()
-                xtcImageObject.setBitmap(shareImage);
-                //如果图片在公共目录，可以直接设置图片路径即可
-                //第二步：创建XTCShareMessage对象，并将shareObject属性设置为xtcTextObject对象
-                val xtcShareMessage = XTCShareMessage();
-                xtcShareMessage.shareObject = xtcImageObject;
-                //第三步：创建SendMessageToXTC.Request对象，并设置message属性为xtcShareMessage
-                val request = SendMessageToXTC.Request();
-                request.message = xtcShareMessage;
-                request.flag = 1
-                //第四步：创建ShareMessageManager对象，调用sendRequestToXTC方法，传入SendMessageToXTC.Request对象和AppKey
-                ShareMessageManager(this).sendRequestToXTC(request, BaseApplication.APP_ID);
-            }catch (e:Exception){
+                val xtcImageObject = XTCImageObject().apply { setBitmap(shareImage) }
+                val xtcShareMessage = XTCShareMessage().apply { shareObject = xtcImageObject }
+                val request = SendMessageToXTC.Request().apply {
+                    message = xtcShareMessage
+                    flag = 1
+                }
+                ShareMessageManager(this@NoteViewer).sendRequestToXTC(request, BaseApplication.APP_ID)
+            } catch (e: Exception) {
                 e.printStackTrace()
+                withContext(Dispatchers.Main) { makeToast("分享失败") }
             }
-        }, 800)
+        }
     }
 }
