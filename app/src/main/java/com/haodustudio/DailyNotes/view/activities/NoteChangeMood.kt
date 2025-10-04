@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.haodustudio.DailyNotes.BaseApplication
@@ -31,7 +32,10 @@ import kotlin.concurrent.thread
 class NoteChangeMood : BaseActivity() {
 
     private val binding by lazy { ActivityNoteChangeMoodBinding.inflate(layoutInflater) }
-    private val appViewModel by lazy { BaseApplication.viewModel as GlobalViewModel }
+    private val appViewModel = ViewModelProvider(
+        BaseApplication.instance,
+        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+    )[GlobalViewModel::class.java]
     private var isFirstWrite = false
     private lateinit var note: Note
     private lateinit var moodAdapter: MoodAdapter

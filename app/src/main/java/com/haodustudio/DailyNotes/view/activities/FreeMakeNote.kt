@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.R
@@ -52,7 +53,10 @@ import kotlin.math.abs
 
 class FreeMakeNote: DialogActivity(noShot = true, canDis = true) {
     private val binding by lazy { ActivityFreeMakeNoteBinding.inflate(layoutInflater) }
-    private val appViewModel by lazy { BaseApplication.viewModel as GlobalViewModel }
+    private val appViewModel = ViewModelProvider(
+        BaseApplication.instance,
+        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+    )[GlobalViewModel::class.java]
     private lateinit var note: Note
     private var isSupportSwipeBack = true
     private var _editMode = false

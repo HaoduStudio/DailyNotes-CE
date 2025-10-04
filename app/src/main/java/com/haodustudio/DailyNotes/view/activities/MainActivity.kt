@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,12 +40,16 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
 import java.io.FileInputStream
 import java.io.ObjectInputStream
+import androidx.core.content.edit
 
 
 class MainActivity : BaseActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val appViewModel by lazy { BaseApplication.viewModel as GlobalViewModel }
+    private val appViewModel = ViewModelProvider(
+        BaseApplication.instance,
+        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+    )[GlobalViewModel::class.java]
     private lateinit var notesAdapter: BaseNoteAdapter
     private val mNoteList = ArrayList<BaseNoteAdapter.NoteItem>()
     private lateinit var mWakeLock: PowerManager.WakeLock
@@ -303,7 +308,7 @@ class MainActivity : BaseActivity() {
                     emit("Moved $aNote Failure")
                 }
             }
-            sharedPreferences.edit().putBoolean("transportSuccessful", true).apply()
+            sharedPreferences.edit { putBoolean("transportSuccessful", true) }
 
             delay(200)
             emit("Done")

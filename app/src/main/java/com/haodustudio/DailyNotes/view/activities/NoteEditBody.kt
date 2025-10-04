@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.databinding.ActivityNoteEditBodyBinding
 import com.haodustudio.DailyNotes.helper.makeToast
@@ -19,7 +20,10 @@ import kotlin.concurrent.thread
 class NoteEditBody : DialogActivity() {
 
     private val binding by lazy { ActivityNoteEditBodyBinding.inflate(layoutInflater) }
-    private val appViewModel by lazy { BaseApplication.viewModel as GlobalViewModel }
+    private val appViewModel = ViewModelProvider(
+        BaseApplication.instance,
+        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+    )[GlobalViewModel::class.java]
     private lateinit var note: Note
     private var textColorIdNow = 1
 

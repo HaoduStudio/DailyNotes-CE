@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.haodustudio.DailyNotes.BaseApplication
@@ -24,7 +25,10 @@ import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 
 class AboutSoftware : BaseActivity() {
     private val binding by lazy { ActivityAboutSoftwareBinding.inflate(layoutInflater) }
-    private val appViewModel by lazy { BaseApplication.viewModel as GlobalViewModel }
+    private val appViewModel = ViewModelProvider(
+        BaseApplication.instance,
+        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+    )[GlobalViewModel::class.java]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -65,16 +65,18 @@ object FileUtils {
         var flag = true
         // 删除文件夹中的所有文件包括子目录
         val files = dirFile.listFiles()
-        for (i in files.indices) {
-            // 删除子文件
-            if (files[i].isFile) {
-                flag = deleteFile(files[i].absolutePath)
-                if (!flag) break
-            } else if (files[i].isDirectory) {
-                flag = deleteDirectory(
-                    files[i].absolutePath
-                )
-                if (!flag) break
+        if (files != null) {
+            for (i in files.indices) {
+                // 删除子文件
+                if (files[i].isFile) {
+                    flag = deleteFile(files[i].absolutePath)
+                    if (!flag) break
+                } else if (files[i].isDirectory) {
+                    flag = deleteDirectory(
+                        files[i].absolutePath
+                    )
+                    if (!flag) break
+                }
             }
         }
         if (!flag) {
@@ -280,7 +282,7 @@ object FileUtils {
 
     fun getAllFileNameInAssets(path: String): ArrayList<String> {
         val result = ArrayList<String>()
-        BaseApplication.context.assets.list(path)?.let {
+        BaseApplication.instance.assets.list(path)?.let {
             result.addAll(it)
         }
         return result

@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.haodustudio.DailyNotes.BaseApplication
@@ -36,7 +37,10 @@ class NoteRecording : DialogActivity() {
     private val binding by lazy { ActivityNoteRecordingBinding.inflate(layoutInflater) }
     private lateinit var ringReceiver: RINGReceiver
     private lateinit var arm: AudioRecordManager
-    private val appViewModel by lazy { BaseApplication.viewModel as GlobalViewModel }
+    private val appViewModel = ViewModelProvider(
+        BaseApplication.instance,
+        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+    )[GlobalViewModel::class.java]
     private lateinit var note: Note
     private val maximumDuration = 1000*60*3
     private val mTimer = Timer()

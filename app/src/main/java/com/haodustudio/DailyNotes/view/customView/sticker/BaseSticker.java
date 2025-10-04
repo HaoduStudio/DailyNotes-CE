@@ -45,7 +45,7 @@ public abstract class BaseSticker implements ISupportOperation {
     public BaseSticker(Bitmap bitmap) {
         //将贴纸默认移动到屏幕中间
         initSticker(bitmap);
-        WindowManager windowManager = (WindowManager) BaseApplication.context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) BaseApplication.Companion.getInstance().getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
 
@@ -78,7 +78,7 @@ public abstract class BaseSticker implements ISupportOperation {
         mDstPoints = mSrcPoints.clone();
         mStickerBound = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
 
-        mDelBitmap = BitmapFactory.decodeResource(BaseApplication.context.getResources(), R.drawable.ic_sticker_view_delete);
+        mDelBitmap = BitmapFactory.decodeResource(BaseApplication.Companion.getInstance().getResources(), R.drawable.ic_sticker_view_delete);
         mDelBound = new RectF(0 - mDelBitmap.getWidth() / 2 - PADDING, 0 - mDelBitmap.getHeight() / 2 - PADDING, mDelBitmap.getWidth() / 2 + PADDING, mDelBitmap.getHeight() / 2 + PADDING);
 
     }

@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.R
@@ -36,7 +37,10 @@ import kotlin.concurrent.thread
 class NoteAddMedia : BaseActivity() {
 
     private val binding by lazy { ActivityNoteAddMediaBinding.inflate(layoutInflater) }
-    private val appViewModel by lazy { BaseApplication.viewModel as GlobalViewModel }
+    private val appViewModel = ViewModelProvider(
+        BaseApplication.instance,
+        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+    )[GlobalViewModel::class.java]
     private lateinit var note: Note
 
     @SuppressLint("CheckResult", "SetTextI18n")

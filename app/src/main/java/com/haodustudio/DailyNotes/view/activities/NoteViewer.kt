@@ -8,6 +8,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.R
@@ -37,7 +38,10 @@ import kotlin.concurrent.thread
 class NoteViewer : BaseActivity() {
 
     private val binding by lazy { ActivityNoteViewerBinding.inflate(layoutInflater) }
-    private val appViewModel by lazy { BaseApplication.viewModel as GlobalViewModel }
+    private val appViewModel = ViewModelProvider(
+        BaseApplication.instance,
+        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+    )[GlobalViewModel::class.java]
     private lateinit var noteData: Note
 
     private lateinit var imageAdapter: ImageAdapter

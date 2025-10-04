@@ -1,11 +1,13 @@
 package com.haodustudio.DailyNotes.viewModel.viewModels
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.applicationScope
 import com.haodustudio.DailyNotes.helper.makeToast
 import com.haodustudio.DailyNotes.model.listener.AddNoteCallBack
 import com.haodustudio.DailyNotes.model.listener.ChangeNoteDataCallBack
@@ -15,6 +17,7 @@ import com.haodustudio.DailyNotes.model.models.Weather
 import com.haodustudio.DailyNotes.utils.FileUtils
 import com.haodustudio.DailyNotes.viewModel.repositories.DatabaseRepository
 import com.haodustudio.DailyNotes.viewModel.repositories.NetworkRepository
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -27,7 +30,7 @@ import java.io.IOException
 class GlobalViewModel : ViewModel() {
     val notesList: LiveData<List<Note>> = DatabaseRepository.getAllNotes()
     val appBackgroundPath: MutableLiveData<String> = MutableLiveData()
-    val appConfigPre by lazy { BaseApplication.context.getSharedPreferences(BaseApplication.APP_SHARED_PREFERENCES_NAME, 0) }
+    val appConfigPre: SharedPreferences by lazy { BaseApplication.instance.getSharedPreferences(BaseApplication.APP_SHARED_PREFERENCES_NAME, 0) }
 
     init {
         appBackgroundPath.value = getAppBackgroundPath()
@@ -41,11 +44,11 @@ class GlobalViewModel : ViewModel() {
             val note = DatabaseRepository.getNoteFromId(noteId)
             change.doChange(note)
             DatabaseRepository.updateNote(note)
-            GlobalScope.launch(Dispatchers.Main) {
+            applicationScope.launch(Dispatchers.Main) {
                 change.onChangeSuccessful()
             }
         }catch (e: Exception) {
-            GlobalScope.launch(Dispatchers.Main) {
+            applicationScope.launch(Dispatchers.Main) {
                 change.onChangeFailure(e)
             }
         }
@@ -58,12 +61,12 @@ class GlobalViewModel : ViewModel() {
             val note = DatabaseRepository.getNoteFromId(id)
             FileUtils.delete(note.data["noteFolder"]!!)
             DatabaseRepository.deleteNote(note)
-            GlobalScope.launch(Dispatchers.Main) {
+            applicationScope.launch(Dispatchers.Main) {
                 func?.onSuccessful()
             }
         }catch (e: Exception) {
             if (func != null) {
-                GlobalScope.launch(Dispatchers.Main) {
+                applicationScope.launch(Dispatchers.Main) {
                     func.onFailure(e)
                 }
             }else {
@@ -81,7 +84,7 @@ class GlobalViewModel : ViewModel() {
                 }
             }
             if (hasExists) {
-                GlobalScope.launch(Dispatchers.Main) {
+                applicationScope.launch(Dispatchers.Main) {
                     func?.hasExist()
                 }
             }else {
@@ -91,13 +94,13 @@ class GlobalViewModel : ViewModel() {
                 FileUtils.makeRootDirectory(newDirInNote + "record")
                 FileUtils.makeRootDirectory(newDirInNote + "image")
                 FileUtils.makeRootDirectory(newDirInNote + "video")
-                GlobalScope.launch(Dispatchers.Main) {
+                applicationScope.launch(Dispatchers.Main) {
                     func?.onSuccessful(newId)
                 }
             }
         }catch (e: Exception) {
             if (func != null) {
-                GlobalScope.launch(Dispatchers.Main) {
+                applicationScope.launch(Dispatchers.Main) {
                     func.onFailure(e)
                 }
             }else {

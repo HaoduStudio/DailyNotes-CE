@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.haodustudio.DailyNotes.utils
 
 import android.app.Activity
@@ -12,7 +14,6 @@ import android.util.Base64
 import android.util.Log
 import android.view.View
 import com.haodustudio.DailyNotes.BaseApplication
-import com.haodustudio.DailyNotes.BaseApplication.Companion.context
 import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 import java.io.InputStream
@@ -20,7 +21,7 @@ import java.io.InputStream
 
 object BitmapUtils {
     fun getImageFromAssetsFile(filePath: String): Bitmap {
-        val am: AssetManager = BaseApplication.context.resources.assets
+        val am: AssetManager = BaseApplication.instance.resources.assets
         val mIs: InputStream = am.open(filePath)
         val image = BitmapFactory.decodeStream(mIs)
         mIs.close()
@@ -39,7 +40,7 @@ object BitmapUtils {
 
     // 高斯模糊
     fun rsBlur(source: Bitmap, radius: Int = 0): Bitmap {
-        val renderScript = RenderScript.create(context)
+        val renderScript = RenderScript.create(BaseApplication.instance)
         Log.i("BitmapUtils", "scale size:" + source.width + "*" + source.height)
         val input = Allocation.createFromBitmap(renderScript, source)
         val output = Allocation.createTyped(renderScript, input.type)

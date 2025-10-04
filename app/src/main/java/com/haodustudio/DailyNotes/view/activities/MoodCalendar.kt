@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.databinding.ActivityMoodCalendarBinding
@@ -19,7 +20,10 @@ import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 class MoodCalendar : BaseActivity() {
 
     private val binding by lazy { ActivityMoodCalendarBinding.inflate(layoutInflater) }
-    private val appViewModel by lazy { BaseApplication.viewModel as GlobalViewModel }
+    private val appViewModel = ViewModelProvider(
+        BaseApplication.instance,
+        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+    )[GlobalViewModel::class.java]
     private lateinit var adapter: MoodCalendarAdapter
     private val moodList = ArrayList<MoodCalendarAdapter.MoodItem>()
     private var yyNow = DateUtils.getYYYYFromCalendar()

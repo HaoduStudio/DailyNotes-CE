@@ -10,7 +10,7 @@ data class BackgroundList (
     val code: Int?,
 ) {
     fun getList(): List<String> {
-        if (code != 0 || code == null) {
+        if (code != 0) {
             throw RuntimeException("Result code is 1 or null")
         }
         return backgroundList

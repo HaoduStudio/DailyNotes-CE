@@ -3,14 +3,14 @@ package com.haodustudio.DailyNotes.utils
 import android.app.Service
 import android.content.Context
 import android.media.AudioManager
-import com.haodustudio.DailyNotes.BaseApplication.Companion.context
+import com.haodustudio.DailyNotes.BaseApplication
 
 
 /**
  * 音量工具类
  */
 object VolumeUtil {
-    private var mAudioManager: AudioManager = context.getSystemService(Service.AUDIO_SERVICE) as AudioManager
+    private var mAudioManager: AudioManager = BaseApplication.instance.getSystemService(Service.AUDIO_SERVICE) as AudioManager
 
     //获取最大多媒体音量
     val mediaMaxVolume: Int
@@ -79,7 +79,7 @@ object VolumeUtil {
             mAudioManager.setStreamVolume(
                 AudioManager.STREAM_VOICE_CALL,
                 max,
-                AudioManager.STREAM_VOICE_CALL
+                AudioManager.FLAG_PLAY_SOUND
             )
             // 设置成听筒模式
             mAudioManager.mode = AudioManager.MODE_IN_COMMUNICATION

@@ -15,6 +15,7 @@ import android.widget.SeekBar
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.databinding.ActivityNoteAddStickerBinding
 import com.haodustudio.DailyNotes.helper.makeToast
@@ -30,7 +31,10 @@ import kotlin.math.ceil
 class NoteAddSticker : NoRightSlideActivity() {
 
     private val binding by lazy { ActivityNoteAddStickerBinding.inflate(layoutInflater) }
-    private val appViewModel by lazy { BaseApplication.viewModel as GlobalViewModel }
+    private val appViewModel = ViewModelProvider(
+        BaseApplication.instance,
+        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+    )[GlobalViewModel::class.java]
     private lateinit var noteData: Note
 
     private var _isEditingSticker = true
@@ -146,7 +150,7 @@ class NoteAddSticker : NoRightSlideActivity() {
             override fun onDrawerOpened(arg0: View) {
                 Log.e("mDrawerLayout", "open")
                 try {
-                    val vibrator = BaseApplication.context.getSystemService(VIBRATOR_SERVICE) as Vibrator
+                    val vibrator = BaseApplication.instance.getSystemService(VIBRATOR_SERVICE) as Vibrator
                     vibrator.vibrate(34)
                 }catch (e:Exception){
                     e.printStackTrace()

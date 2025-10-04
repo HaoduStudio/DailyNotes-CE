@@ -3,6 +3,7 @@ package com.haodustudio.DailyNotes.view.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.databinding.ActivityNoteOptionBinding
 import com.haodustudio.DailyNotes.helper.makeToast
@@ -17,7 +18,10 @@ import kotlin.concurrent.thread
 class NoteOption : DialogActivity(noShot = true) {
 
     private val binding by lazy { ActivityNoteOptionBinding.inflate(layoutInflater) }
-    private val appViewModel by lazy { BaseApplication.viewModel as GlobalViewModel }
+    private val appViewModel = ViewModelProvider(
+        BaseApplication.instance,
+        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
+    )[GlobalViewModel::class.java]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

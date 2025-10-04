@@ -12,17 +12,26 @@ import android.util.TypedValue
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import com.haodustudio.DailyNotes.utils.BitmapUtils
 import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import rx_activity_result2.RxActivityResult
 import java.util.*
 
 
-class BaseApplication : Application() {
+class BaseApplication : Application(), ViewModelStoreOwner {
+
+    private val appViewModelStore by lazy { ViewModelStore() }
+    override val viewModelStore: ViewModelStore
+        get() = appViewModelStore
+
     companion object {
-        @SuppressLint("StaticFieldLeak")
-        lateinit var context: Context
-        lateinit var viewModel: ViewModel
+        lateinit var instance: BaseApplication
+            private set
 
         const val APP_ID = "a81252c4145a48a9a52f0d3015a891d9"
 
@@ -95,13 +104,12 @@ class BaseApplication : Application() {
         super.onCreate()
         RxActivityResult.register(this)
         registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
-        context = applicationContext
+        instance = this
         OLD_DATA_PATH = Environment.getExternalStorageDirectory().path + "/Android/data/" + packageName + '/'
-        OLD_ASSETS_PATH = (context.filesDir?.parent ?: "") + "/assest/" // No spelling mistakes
+        OLD_ASSETS_PATH = (instance.filesDir?.parent ?: "") + "/assest/" // No spelling mistakes
         NOTES_PATH = filesDir.absolutePath + "/notes/"
         TEMPLATE_DOWNLOAD_FROM_URI_PATH = filesDir.absolutePath + "/uri_template/"
         BACKGROUND_DOWNLOAD_FROM_URI_PATH = filesDir.absolutePath + "/uri_background/"
-        viewModel = ViewModelProvider.AndroidViewModelFactory(this).create(GlobalViewModel::class.java)
     }
 
     override fun onTerminate() {
@@ -109,3 +117,5 @@ class BaseApplication : Application() {
         unregisterActivityLifecycleCallbacks(activityLifecycleCallbacks)
     }
 }
+
+val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
