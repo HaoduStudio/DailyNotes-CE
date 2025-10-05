@@ -1,14 +1,36 @@
 package com.haodustudio.DailyNotes.utils
 
+import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.util.Log
+import java.io.IOException
 
 object PlayMediaUtils {
-    private val mp = MediaPlayer()
+    private const val TAG = "PlayMediaUtils"
 
-    fun play(path:String){
-        initMP(path)
-        if(!mp.isPlaying){
-            mp.start()
+    private val mp: MediaPlayer = MediaPlayer().apply {
+        applyDefaultAudioAttributes()
+    }
+
+    private fun MediaPlayer.applyDefaultAudioAttributes() {
+        setAudioAttributes(
+            AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build()
+        )
+    }
+
+    @JvmStatic
+    fun play(path: String, onError: ((Throwable) -> Unit)? = null) {
+        try {
+            initMP(path)
+            if (!mp.isPlaying) {
+                mp.start()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start media from $path", e)
+            onError?.invoke(e)
         }
     }
     fun pause(){
@@ -25,8 +47,10 @@ object PlayMediaUtils {
         }
     }
 
-    fun initMP(path:String){
+    @Throws(IOException::class, IllegalStateException::class, SecurityException::class)
+    fun initMP(path: String) {
         mp.reset()
+        mp.applyDefaultAudioAttributes()
         mp.setDataSource(path)
         mp.prepare()
     }
@@ -45,10 +69,20 @@ object PlayMediaUtils {
     }
 
     fun getTime(): Int{
-        return mp.duration
+        return try {
+            mp.duration
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to read duration", e)
+            0
+        }
     }
 
-    fun getPos() = mp.currentPosition
+    fun getPos(): Int = try {
+        mp.currentPosition
+    } catch (e: Exception) {
+        Log.e(TAG, "Failed to read current position", e)
+        0
+    }
 
     fun setOnCompleteListener(func : () -> Unit) {
         mp.setOnCompletionListener {
