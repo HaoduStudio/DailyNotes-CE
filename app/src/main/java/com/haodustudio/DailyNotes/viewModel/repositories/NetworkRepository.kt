@@ -1,5 +1,6 @@
 package com.haodustudio.DailyNotes.viewModel.repositories
 
+import android.util.Log
 import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.api.DailyServer
 import com.haodustudio.DailyNotes.api.RetrofitInstance
@@ -11,6 +12,8 @@ import com.haodustudio.DailyNotes.model.models.Weather
 import retrofit2.Call
 
 object NetworkRepository {
+    private const val TAG = "NetworkRepository"
+
     @Volatile
     private var service: DailyServer? = null
 
@@ -18,7 +21,12 @@ object NetworkRepository {
         val cached = service
         if (cached != null) return cached
         val retrofit = RetrofitInstance.getInstance(BaseApplication.BASE_SERVER_URI) ?: return null
-        return retrofit.create(DailyServer::class.java).also { service = it }
+        return try {
+            retrofit.create(DailyServer::class.java).also { service = it }
+        } catch (error: RuntimeException) {
+            Log.e(TAG, "Failed to create DailyServer", error)
+            null
+        }
     }
 
     fun getWeatherCall(): Call<Weather>? = ensureService()?.getWeather()
