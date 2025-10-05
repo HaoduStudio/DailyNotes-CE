@@ -4,7 +4,8 @@
 
 ![GitHub Release](https://img.shields.io/github/v/release/HaoduStudio/DailyNotes-CE?label=Release&logo=github)
 [![Issues](https://img.shields.io/github/issues/HaoduStudio/DailyNotes-CE?style=flat&label=Issues&labelColor=444444&color=1F883D&logo=github)](https://github.com/HaoduStudio/DailyNotes-CE/issues)
-[![Pull requests](https://img.shields.io/github/issues-pr/HaoduStudio/DailyNotes-CE?style=flat&label=Pull%20requests&labelColor=444444&color=1F883D&logo=github)](https://github.com/HaoduStudio/DailyNotes-CE/pulls) <br />
+[![Pull requests](https://img.shields.io/github/issues-pr/HaoduStudio/DailyNotes-CE?style=flat&label=Pull%20requests&labelColor=444444&color=1F883D&logo=github)](https://github.com/HaoduStudio/DailyNotes-CE/pulls)
+[![Android CI](https://github.com/HaoduStudio/DailyNotes-CE/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/HaoduStudio/DailyNotes-CE/actions/workflows/build.yml) <br />
 
 [APK下载](https://github.com/HaoduStudio/DailyNotes-CE/releases) |
 [原版存储库](https://github.com/HaoduStudio/DailyNotes-V3)
