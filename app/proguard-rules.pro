@@ -115,6 +115,10 @@
          public <init>(org.json.JSONObject);
 }
 
+# Retrofit service interfaces rely on generic signatures for call adapters
+-keep interface com.haodustudio.DailyNotes.api.** { *; }
+-keep class com.haodustudio.DailyNotes.api.** { *; }
+
 #不混淆泛型
 -keepattributes Signature
 

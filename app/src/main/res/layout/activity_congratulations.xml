@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".view.activities.CongratulationsActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loadingContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ECE5D1">
@@ -20,6 +21,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/loadingText"
             android:layout_width="90dp"
             android:layout_height="0dp"
             android:gravity="center"
