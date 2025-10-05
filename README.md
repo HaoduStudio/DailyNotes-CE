@@ -5,7 +5,8 @@
 ![GitHub Release](https://img.shields.io/github/v/release/HaoduStudio/DailyNotes-CE?label=Release&logo=github)
 [![Issues](https://img.shields.io/github/issues/HaoduStudio/DailyNotes-CE?style=flat&label=Issues&labelColor=444444&color=1F883D&logo=github)](https://github.com/HaoduStudio/DailyNotes-CE/issues)
 [![Pull requests](https://img.shields.io/github/issues-pr/HaoduStudio/DailyNotes-CE?style=flat&label=Pull%20requests&labelColor=444444&color=1F883D&logo=github)](https://github.com/HaoduStudio/DailyNotes-CE/pulls)
-[![Android CI](https://github.com/HaoduStudio/DailyNotes-CE/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/HaoduStudio/DailyNotes-CE/actions/workflows/build.yml) <br />
+[![Android CI](https://github.com/HaoduStudio/DailyNotes-CE/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/HaoduStudio/DailyNotes-CE/actions/workflows/build.yml) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHaoduStudio%2FDailyNotes-CE.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FHaoduStudio%2FDailyNotes-CE?ref=badge_shield)
+<br />
 
 [APK下载](https://github.com/HaoduStudio/DailyNotes-CE/releases) |
 [原版存储库](https://github.com/HaoduStudio/DailyNotes-V3)
@@ -22,3 +23,6 @@ DailyNotes CE 是基于 DailyNotes V3 大版本开源代码二次修改的社区
 
 - `DailyNotes-V3` 原版仓库使用 [Apache License 2.0](https://github.com/HaoduStudio/DailyNotes-V3/blob/master/LICENSE) 开源许可证
 - `DailyNotes-CE` 社区版仓库使用 [GNU General Public License V3](https://github.com/HaoduStudio/DailyNotes-CE/blob/master/LICENSE) 开源许可证
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHaoduStudio%2FDailyNotes-CE.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FHaoduStudio%2FDailyNotes-CE?ref=badge_large)
