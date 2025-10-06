@@ -1,376 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#F2000000"
+    android:background="@color/about_background"
     tools:context=".view.activities.AboutSoftware">
 
-    <VideoView
-        android:id="@+id/video_view"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/about_scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingStart="24dp"
+        android:paddingTop="32dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="32dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <RelativeLayout
-        android:id="@+id/about_foreground"
-        android:background="#FFF"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:src="@mipmap/ic_launcher_foreground" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="35dp"
-            android:textSize="18sp"
-            android:text="@string/app_name"
-            android:textStyle="bold"
-            android:textColor="#2C2C2C"/>
-
-        <TextView
-            android:id="@+id/version_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:text="Version X.X"
-            android:layout_marginBottom="15dp"
-            android:textColor="#2C2C2C"
-            android:textSize="12sp"/>
-    </RelativeLayout>
-
-    <ScrollView
-        android:visibility="gone"
-        android:id="@+id/about_root"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         <LinearLayout
+            android:id="@+id/about_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
+                android:id="@+id/about_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:textStyle="bold"
-                android:layout_marginTop="5dp"
-                android:textSize="18sp"
-                android:text="作者"
-                android:textColor="#FF9800"/>
+                android:text="@string/about"
+                android:textColor="@color/white"
+                android:textSize="26sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="关于软件" />
 
-            <RelativeLayout
-                android:id="@+id/haodus_window"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/bannerCard"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/about_author_style">
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_user_img_haoduyoudu"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:clickable="false"
+                android:focusable="false"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="24dp"
+                app:cardUseCompatPadding="false"
+                app:strokeColor="@color/about_card_stroke"
+                app:strokeWidth="1dp">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="5dp"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/bannerImage"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/about_banner_content_description"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/about_banner"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintDimensionRatio="280:158"
+                        tools:srcCompat="@drawable/about_banner" />
+
+                    <View
+                        android:id="@+id/bannerGradient"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/bg_about_banner_gradient"
+                        app:layout_constraintTop_toTopOf="@id/bannerImage"
+                        app:layout_constraintBottom_toBottomOf="@id/bannerImage"
+                        app:layout_constraintStart_toStartOf="@id/bannerImage"
+                        app:layout_constraintEnd_toEndOf="@id/bannerImage" />
+
+                    <LinearLayout
+                        android:id="@+id/bannerFooter"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:paddingBottom="20dp"
+                        app:layout_constraintBottom_toBottomOf="@id/bannerImage"
+                        app:layout_constraintStart_toStartOf="@id/bannerImage"
+                        app:layout_constraintEnd_toEndOf="@id/bannerImage">
+
+                        <TextView
+                            android:id="@+id/bannerTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/about_banner_title"
+                            android:textColor="@color/white"
+                            android:textSize="22sp"
+                            android:fontFamily="sans-serif-medium"
+                            tools:text="DailyNotes" />
+
+                        <TextView
+                            android:id="@+id/bannerSubtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/about_banner_subtitle"
+                            android:textColor="@color/about_secondary_text"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-light"
+                            tools:text="Community Edition" />
+                    </LinearLayout>
 
                     <TextView
+                        android:id="@+id/bannerBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="好读游独"
-                        android:textStyle="bold"
-                        android:textColor="#FFF"
-                        android:textSize="15sp"
-                        android:layout_gravity="end" />
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/bg_about_badge"
+                        android:fontFamily="sans-serif-medium"
+                        android:paddingStart="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="6dp"
+                        android:text="@string/about_codename_label"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@id/bannerImage"
+                        app:layout_constraintTop_toTopOf="@id/bannerImage"
+                        tools:text="代号：Isla" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="首席开发人员"
-                        android:layout_marginTop="2dp"
-                        android:layout_gravity="end"
-                        android:textColor="#FFF"
-                        android:textSize="10sp"/>
-                </LinearLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/mengxis_window"
+            <TextView
+                android:id="@+id/about_quote_line1"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:layout_marginTop="3dp"
-                android:background="@drawable/about_author_style">
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_user_img_mengxi"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="正因为会失去，所以才要去珍惜"
+                android:textAlignment="center"
+                android:textColor="@color/about_secondary_text"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="5dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="MengXi"
-                        android:textStyle="bold"
-                        android:textColor="#FFF"
-                        android:textSize="15sp"
-                        android:layout_gravity="end" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="运营人员"
-                        android:layout_marginTop="2dp"
-                        android:layout_gravity="end"
-                        android:textColor="#FFF"
-                        android:textSize="10sp"/>
-                </LinearLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/art_people_info"
+            <TextView
+                android:id="@+id/about_quote_line2"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:layout_marginTop="3dp"
-                android:background="@drawable/about_author_style">
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_user_img_arts"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="5dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="美工们"
-                        android:textStyle="bold"
-                        android:textColor="#FFF"
-                        android:textSize="15sp"
-                        android:layout_gravity="end" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="点击查看"
-                        android:layout_marginTop="2dp"
-                        android:layout_gravity="end"
-                        android:textColor="#FFF"
-                        android:textSize="10sp"/>
-                </LinearLayout>
-            </RelativeLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:textStyle="bold"
-                android:layout_marginTop="5dp"
-                android:textSize="18sp"
-                android:text="邮箱 &amp;\n反馈通道"
-                android:textColor="#FF9800"/>
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="希望你能好好利用本软件"
+                android:textAlignment="center"
+                android:textColor="@color/about_secondary_text"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <include
+                android:id="@+id/cardSoftwareVersion"
+                layout="@layout/layout_about_item"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Michael的电子邮箱"
-                android:textStyle="bold"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:textColor="#FFF"
-                android:textSize="15sp"
-                android:layout_marginTop="3dp"/>
+                android:layout_marginTop="16dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <include
+                android:id="@+id/cardContributors"
+                layout="@layout/layout_about_item"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="michaelzhtiger@outloo\nk.com"
-                android:textStyle="italic"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:textColor="#FFF"
-                android:textSize="14.5sp"
-                android:layout_marginTop="1dp"/>
+                android:layout_marginTop="16dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <include
+                android:id="@+id/cardRepository"
+                layout="@layout/layout_about_item"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="MengXi的电子邮箱"
-                android:textStyle="bold"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:textColor="#FFF"
-                android:textSize="15sp"
-                android:layout_marginTop="3dp"/>
+                android:layout_marginTop="16dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <include
+                android:id="@+id/cardPolicy"
+                layout="@layout/layout_about_item"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="me@zhunote.cn"
-                android:textStyle="italic"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:textColor="#FFF"
-                android:textSize="14.5sp"
-                android:layout_marginTop="1dp"/>
+                android:layout_marginTop="16dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <include
+                android:id="@+id/cardPrivacy"
+                layout="@layout/layout_about_item"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="QQ反馈群号"
-                android:textStyle="bold"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:textColor="#FFF"
-                android:textSize="15sp"
-                android:layout_marginTop="3dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="721731698"
-                android:textStyle="italic"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:textColor="#FFF"
-                android:textSize="14.5sp"
-                android:layout_marginTop="1dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="我们的站点"
-                android:textStyle="bold"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:textColor="#FFF"
-                android:textSize="15sp"
-                android:layout_marginTop="3dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="dailynotes.top"
-                android:textStyle="italic"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:textColor="#FFF"
-                android:textSize="14.5sp"
-                android:layout_marginTop="1dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:textStyle="bold"
-                android:layout_marginTop="5dp"
-                android:textSize="18sp"
-                android:text="开源信息"
-                android:textColor="#FF9800"/>
-
-            <TextView
-                android:id="@+id/open_source_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="5dp"
-                android:textSize="12sp"
-                android:text="你可以在Github上下载并编译我们的源码\n\n网址: github.com/HaoduStudio/DailyNotes"
-                android:textColor="#FFF"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="5dp"
-                android:textSize="12sp"
-                android:text="你必须遵循Apache2.0开源协议，我们将保留一切追究权利"
-                android:textColor="#FFF"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:textStyle="bold"
-                android:layout_marginTop="5dp"
-                android:textSize="18sp"
-                android:text="隐私政策"
-                android:textColor="#FF9800"/>
-
-            <ImageView
-                android:id="@+id/user_pp_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_cute_loading"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:textStyle="bold"
-                android:layout_marginTop="5dp"
-                android:textSize="18sp"
-                android:text="版权声明"
-                android:textColor="#FF9800"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="本软件不涉及盈利，内嵌网络视频和图片均已标明出处。如有侵权，请联系我们，我们将马上删除。\n\n本软件中大部分使用的图标来自iconfont.cn。\n"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:textColor="#FFF"
-                android:textSize="12sp"
-                android:layout_marginTop="4dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="HaoduStudio版权所有"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:layout_marginBottom="5dp"
-                android:textStyle="bold"
-                android:textColor="#FFF"
-                android:textSize="12sp" />
+                android:layout_marginTop="16dp" />
         </LinearLayout>
-    </ScrollView>
-</FrameLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

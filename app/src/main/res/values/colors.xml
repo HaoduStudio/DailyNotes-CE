@@ -24,4 +24,10 @@
 
 
     <color name="dialog_background">#4D000000</color>
+
+    <color name="about_background">#101013</color>
+    <color name="about_secondary_text">#B3FFFFFF</color>
+    <color name="about_card_background">#18181C</color>
+    <color name="about_card_stroke">#26FFFFFF</color>
+    <color name="about_icon_background">#1FFFFFFF</color>
 </resources>

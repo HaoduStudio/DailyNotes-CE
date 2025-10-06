@@ -8,6 +8,30 @@
     <string name="personalize">个性化</string>
     <string name="guide">使用指南</string>
     <string name="about">关于软件</string>
+    <string name="about_banner_content_description">关于软件展示图</string>
+    <string name="about_banner_title">DailyNotes</string>
+    <string name="about_banner_subtitle">Community Edition</string>
+    <string name="about_codename_label">代号：Isla</string>
+    <string name="about_quote">正因为会失去，所以才要去珍惜
+希望你能好好利用本软件</string>
+    <string name="about_section_version_title">软件版本</string>
+    <string name="about_section_version_placeholder">v—</string>
+    <string name="about_section_version_subtitle">v%1$s</string>
+    <string name="about_section_version_desc">软件版本卡片</string>
+    <string name="about_section_contributors_title">贡献者</string>
+    <string name="about_section_contributors_subtitle">原作者/开发者/美工们</string>
+    <string name="about_section_contributors_desc">贡献者卡片</string>
+    <string name="about_section_repo_title">开源仓库</string>
+    <string name="about_section_repo_subtitle">在 Github 上查看</string>
+    <string name="about_section_repo_desc">开源仓库卡片</string>
+    <string name="about_section_policy_title">EULA与隐私协议</string>
+    <string name="about_section_policy_subtitle">阅读协议全文</string>
+    <string name="about_section_policy_desc">EULA与隐私协议卡片</string>
+    <string name="about_section_privacy_title">隐私设置</string>
+    <string name="about_section_privacy_subtitle">管理隐私相关选项</string>
+    <string name="about_section_privacy_desc">隐私设置卡片</string>
+    <string name="about_network_unavailable">无网络连接</string>
+    <string name="about_feature_placeholder">敬请期待</string>
 
     <string name="please_write_one_note_at_least">请至少写一篇手帐</string>
     <string name="update_complete">更新完成</string>
