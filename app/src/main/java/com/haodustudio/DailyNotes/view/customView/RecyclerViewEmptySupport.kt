@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.haodustudio.DailyNotes.R
 
-class RecyclerViewEmptySupport @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : RecyclerView(context, attrs, defStyleAttr) {
+class RecyclerViewEmptySupport : RecyclerView {
+    
+    constructor(context: Context) : super(context)
+    
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private var emptyView: View? = null
 
