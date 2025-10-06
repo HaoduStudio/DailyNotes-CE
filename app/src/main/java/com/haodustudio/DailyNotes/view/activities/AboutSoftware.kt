@@ -1,102 +1,123 @@
 package com.haodustudio.DailyNotes.view.activities
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.edit
-import androidx.lifecycle.ViewModelProvider
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
+import android.os.Build
 import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.R
 import com.haodustudio.DailyNotes.databinding.ActivityAboutSoftwareBinding
 import com.haodustudio.DailyNotes.helper.makeToast
-import com.haodustudio.DailyNotes.utils.ViewUtils
+import com.haodustudio.DailyNotes.view.activities.ViewImage
 import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
-import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
-
 
 class AboutSoftware : BaseActivity() {
     private val binding by lazy { ActivityAboutSoftwareBinding.inflate(layoutInflater) }
-    private val appViewModel = ViewModelProvider(
-        BaseApplication.instance,
-        ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.instance)
-    )[GlobalViewModel::class.java]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        binding.openSourceText.setOnClickListener {
-            makeToast("视频加载中\n改编自：@我家邻居全是猫")
-            val mIntent = Intent(this, ViewImage::class.java)
-            val videoUrl = BaseApplication.buildServerUrl("/static/about_eggshell_video.mp4")
-            if (videoUrl == null) {
-                makeToast("无网络连接")
+        configureBanner()
+        configureCards()
+    }
+
+    private fun configureBanner() {
+        binding.bannerBadge.text = getString(R.string.about_codename_label)
+        binding.bannerTitle.text = getString(R.string.about_banner_title)
+        binding.bannerSubtitle.text = getString(R.string.about_banner_subtitle)
+    }
+
+    private fun configureCards() {
+        val versionName = runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                packageManager.getPackageInfo(
+                    packageName,
+                    PackageManager.PackageInfoFlags.of(0)
+                ).versionName
             } else {
-                mIntent.putExtra("isVideo", true)
-                mIntent.putExtra("path", videoUrl)
-                startActivity(mIntent)
+                @Suppress("DEPRECATION")
+                packageManager.getPackageInfo(packageName, 0).versionName
+            }
+        }.getOrNull()
+
+        binding.cardSoftwareVersion.apply {
+            title.text = getString(R.string.about_section_version_title)
+            subtitle.text = versionName?.let {
+                getString(R.string.about_section_version_subtitle, it)
+            } ?: getString(R.string.about_section_version_placeholder)
+            icon.setImageResource(R.drawable.info)
+            root.contentDescription = getString(R.string.about_section_version_desc)
+            root.setOnClickListener {
+                makeToast(subtitle.text.toString())
             }
         }
 
-        binding.artPeopleInfo.setOnClickListener {
-            val mIntent = Intent(this, ViewImage::class.java)
-            val imageUrl = BaseApplication.buildServerUrl("/static/about_thanks_img.png")
-            if (imageUrl == null) {
-                makeToast("无网络连接")
-            } else {
-                mIntent.putExtra("path", imageUrl)
-                mIntent.putExtra("zoomEnabled", false)
-                startActivity(mIntent)
+        binding.cardContributors.apply {
+            title.text = getString(R.string.about_section_contributors_title)
+            subtitle.text = getString(R.string.about_section_contributors_subtitle)
+            icon.setImageResource(R.drawable.usergroup)
+            root.contentDescription = getString(R.string.about_section_contributors_desc)
+            root.setOnClickListener {
+                openRemoteAsset("/static/about_thanks_img.png", zoomEnabled = false)
             }
         }
 
-        binding.haodusWindow.setOnClickListener {
-            makeToast("诶哟你干嘛 (")
+        binding.cardRepository.apply {
+            title.text = getString(R.string.about_section_repo_title)
+            subtitle.text = getString(R.string.about_section_repo_subtitle)
+            icon.setImageResource(R.drawable.ic_about_github)
+            root.contentDescription = getString(R.string.about_section_repo_desc)
+            root.setOnClickListener {
+                openExternalUrl("https://github.com/HaoduStudio/DailyNotes")
+            }
         }
 
-        binding.mengxisWindow.setOnClickListener {
-            makeToast("WebStorm，启动！")
+        binding.cardPolicy.apply {
+            title.text = getString(R.string.about_section_policy_title)
+            subtitle.text = getString(R.string.about_section_policy_subtitle)
+            icon.setImageResource(R.drawable.ic_about_policy)
+            root.contentDescription = getString(R.string.about_section_policy_desc)
+            root.setOnClickListener {
+                openRemoteAsset("/static/about_user_privacy_policy.png", zoomEnabled = true)
+            }
         }
 
-        val verName = packageManager.
-            getPackageInfo(packageName, 0).versionName
-        binding.versionInfo.text = "Version $verName"
-
-        // tot = 2.5, ge ge ge (?
-        ViewUtils.fadeIn(binding.aboutForeground, 1000) {
-            binding.aboutForeground.postDelayed({
-                ViewUtils.fadeOut(binding.aboutForeground, 500) {
-                    startMainPage()
-                }
-            }, 1000)
+        binding.cardPrivacy.apply {
+            title.text = getString(R.string.about_section_privacy_title)
+            subtitle.text = getString(R.string.about_section_privacy_subtitle)
+            icon.setImageResource(R.drawable.ic_about_privacy)
+            root.contentDescription = getString(R.string.about_section_privacy_desc)
+            root.setOnClickListener {
+                makeToast(getString(R.string.about_feature_placeholder))
+            }
         }
     }
 
-    private fun startMainPage() {
-        binding.videoView.visibility = View.GONE
-        binding.aboutForeground.visibility = View.GONE
-        binding.aboutRoot.visibility = View.VISIBLE
-//        Glide.with(this).asGif().load(R.drawable.ic_cute_loading).into(binding.userPpImg)
-        val policyUrl = BaseApplication.buildServerUrl("/static/about_user_privacy_policy.png")
-        if (policyUrl == null) {
-            makeToast("无网络连接")
+    private fun openRemoteAsset(path: String, zoomEnabled: Boolean) {
+        val assetUrl = BaseApplication.buildServerUrl(path)
+        if (assetUrl == null) {
+            makeToast(getString(R.string.about_network_unavailable))
+            return
+        }
+
+        val viewerIntent = Intent(this, ViewImage::class.java).apply {
+            putExtra("path", assetUrl)
+            putExtra("zoomEnabled", zoomEnabled)
+            if (path.endsWith(".mp4")) {
+                putExtra("isVideo", true)
+            }
+        }
+        startActivity(viewerIntent)
+    }
+
+    private fun openExternalUrl(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
         } else {
-            Glide
-                .with(this)
-                .load(policyUrl)
-                .placeholder(R.drawable.ic_cute_loading)
-                .skipMemoryCache(true) // 不使用内存缓存
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .into(binding.userPpImg)
+            makeToast(url)
         }
     }
 }
