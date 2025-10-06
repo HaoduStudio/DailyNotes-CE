@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- About Page Banner Dimensions for large tablets >= 720dp width -->
+    <dimen name="banner_content_padding">32dp</dimen>
+    <dimen name="banner_badge_margin">28dp</dimen>
+    <dimen name="banner_badge_padding_horizontal">20dp</dimen>
+    <dimen name="banner_badge_padding_vertical">10dp</dimen>
+    <dimen name="banner_badge_text_size">16sp</dimen>
+</resources>

@@ -12,19 +12,18 @@
     <string name="about_banner_title">DailyNotes</string>
     <string name="about_banner_subtitle">Community Edition</string>
     <string name="about_codename_label">代号：Isla</string>
-    <string name="about_quote">正因为会失去，所以才要去珍惜
-希望你能好好利用本软件</string>
+    <string name="about_quote">正因为会失去，所以才要去珍惜</string>
     <string name="about_section_version_title">软件版本</string>
     <string name="about_section_version_placeholder">v—</string>
     <string name="about_section_version_subtitle">v%1$s</string>
     <string name="about_section_version_desc">软件版本卡片</string>
     <string name="about_section_contributors_title">贡献者</string>
-    <string name="about_section_contributors_subtitle">原作者/开发者/美工们</string>
+    <string name="about_section_contributors_subtitle">开发者/美工们</string>
     <string name="about_section_contributors_desc">贡献者卡片</string>
     <string name="about_section_repo_title">开源仓库</string>
     <string name="about_section_repo_subtitle">在 Github 上查看</string>
     <string name="about_section_repo_desc">开源仓库卡片</string>
-    <string name="about_section_policy_title">EULA与隐私协议</string>
+    <string name="about_section_policy_title">政策</string>
     <string name="about_section_policy_subtitle">阅读协议全文</string>
     <string name="about_section_policy_desc">EULA与隐私协议卡片</string>
     <string name="about_section_privacy_title">隐私设置</string>

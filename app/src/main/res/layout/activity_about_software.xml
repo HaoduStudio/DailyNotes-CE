@@ -13,10 +13,10 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:fillViewport="true"
-        android:paddingStart="24dp"
-        android:paddingTop="32dp"
-        android:paddingEnd="24dp"
-        android:paddingBottom="32dp"
+        android:paddingStart="12dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,11 +30,11 @@
 
             <TextView
                 android:id="@+id/about_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/about"
                 android:textColor="@color/white"
-                android:textSize="26sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-medium"
                 tools:text="关于软件" />
 
@@ -42,11 +42,11 @@
                 android:id="@+id/bannerCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="12dp"
                 android:clickable="false"
                 android:focusable="false"
                 app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="24dp"
+                app:cardCornerRadius="16dp"
                 app:cardUseCompatPadding="false"
                 app:strokeColor="@color/about_card_stroke"
                 app:strokeWidth="1dp">
@@ -67,7 +67,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintDimensionRatio="280:158"
+                        app:layout_constraintDimensionRatio="16:9"
                         tools:srcCompat="@drawable/about_banner" />
 
                     <View
@@ -85,32 +85,34 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"
-                        android:paddingBottom="20dp"
+                        android:padding="10dp"
                         app:layout_constraintBottom_toBottomOf="@id/bannerImage"
                         app:layout_constraintStart_toStartOf="@id/bannerImage"
                         app:layout_constraintEnd_toEndOf="@id/bannerImage">
 
                         <TextView
                             android:id="@+id/bannerTitle"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/about_banner_title"
                             android:textColor="@color/white"
-                            android:textSize="22sp"
+                            android:textSize="16sp"
                             android:fontFamily="sans-serif-medium"
+                            android:maxLines="1"
+                            android:ellipsize="end"
                             tools:text="DailyNotes" />
 
                         <TextView
                             android:id="@+id/bannerSubtitle"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="2dp"
                             android:text="@string/about_banner_subtitle"
                             android:textColor="@color/about_secondary_text"
-                            android:textSize="14sp"
+                            android:textSize="11sp"
                             android:fontFamily="sans-serif-light"
+                            android:maxLines="1"
+                            android:ellipsize="end"
                             tools:text="Community Edition" />
                     </LinearLayout>
 
@@ -118,17 +120,18 @@
                         android:id="@+id/bannerBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
+                        android:layout_margin="8dp"
                         android:background="@drawable/bg_about_badge"
                         android:fontFamily="sans-serif-medium"
-                        android:paddingStart="12dp"
-                        android:paddingTop="6dp"
-                        android:paddingEnd="12dp"
-                        android:paddingBottom="6dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="4dp"
                         android:text="@string/about_codename_label"
                         android:textColor="@color/white"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         app:layout_constraintEnd_toEndOf="@id/bannerImage"
                         app:layout_constraintTop_toTopOf="@id/bannerImage"
                         tools:text="代号：Isla" />
@@ -139,60 +142,50 @@
                 android:id="@+id/about_quote_line1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="正因为会失去，所以才要去珍惜"
                 android:textAlignment="center"
                 android:textColor="@color/about_secondary_text"
-                android:textSize="14sp"
-                android:fontFamily="sans-serif" />
-
-            <TextView
-                android:id="@+id/about_quote_line2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:gravity="center"
-                android:text="希望你能好好利用本软件"
-                android:textAlignment="center"
-                android:textColor="@color/about_secondary_text"
-                android:textSize="14sp"
-                android:fontFamily="sans-serif" />
+                android:textSize="8sp"
+                android:fontFamily="sans-serif"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <include
                 android:id="@+id/cardSoftwareVersion"
                 layout="@layout/layout_about_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="8dp" />
 
             <include
                 android:id="@+id/cardContributors"
                 layout="@layout/layout_about_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="8dp" />
 
             <include
                 android:id="@+id/cardRepository"
                 layout="@layout/layout_about_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="8dp" />
 
             <include
                 android:id="@+id/cardPolicy"
                 layout="@layout/layout_about_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="8dp" />
 
             <include
                 android:id="@+id/cardPrivacy"
                 layout="@layout/layout_about_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="8dp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
