@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="contributors_screen_padding_horizontal">12dp</dimen>
+    <dimen name="contributors_screen_padding_vertical">16dp</dimen>
+    <dimen name="contributors_heading_text_size">16sp</dimen>
+    <dimen name="contributors_section_title_text_size">11sp</dimen>
+    <dimen name="contributors_body_text_size">10sp</dimen>
+    <dimen name="contributors_card_corner_radius">12dp</dimen>
+    <dimen name="contributors_card_padding">12dp</dimen>
+    <dimen name="contributors_card_margin_top">8dp</dimen>
+    <dimen name="contributors_section_margin_top">16dp</dimen>
+    <dimen name="contributors_subsection_margin_top">20dp</dimen>
+    <dimen name="contributors_list_margin_top">8dp</dimen>
+    <dimen name="contributors_avatar_size">48dp</dimen>
+    <dimen name="contributors_avatar_text_margin_start">12dp</dimen>
+    <dimen name="contributors_oss_avatar_size">40dp</dimen>
+    <dimen name="contributors_oss_item_padding">8dp</dimen>
+    <dimen name="contributors_footer_logo_size">36dp</dimen>
+    <dimen name="contributors_footer_padding">12dp</dimen>
+    <dimen name="contributors_footer_text_size">9sp</dimen>
+    <dimen name="contributors_open_source_title_text_size">12sp</dimen>
+    <dimen name="contributors_progress_margin_top">12dp</dimen>
+    <dimen name="contributors_progress_indicator_size">32dp</dimen>
+</resources>

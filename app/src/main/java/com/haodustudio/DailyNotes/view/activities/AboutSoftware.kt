@@ -60,7 +60,7 @@ class AboutSoftware : BaseActivity() {
             icon.setImageResource(R.drawable.usergroup)
             root.contentDescription = getString(R.string.about_section_contributors_desc)
             root.setOnClickListener {
-                openRemoteAsset("/static/about_thanks_img.png", zoomEnabled = false)
+                openContributorsPage()
             }
         }
 
@@ -110,6 +110,10 @@ class AboutSoftware : BaseActivity() {
             }
         }
         startActivity(viewerIntent)
+    }
+
+    private fun openContributorsPage() {
+        startActivity(Intent(this, AboutContributorsActivity::class.java))
     }
 
     private fun openExternalUrl(url: String) {

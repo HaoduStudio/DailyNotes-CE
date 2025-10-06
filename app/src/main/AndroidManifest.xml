@@ -36,6 +36,9 @@
             android:name=".view.activities.FreeMakeNote"
             android:exported="false" />
         <activity
+            android:name=".view.activities.AboutContributorsActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.activities.AboutSoftware"
             android:exported="false" />
         <activity
