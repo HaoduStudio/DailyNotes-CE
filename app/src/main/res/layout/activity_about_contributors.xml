@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/about_background"
+    tools:context=".view.activities.AboutContributorsActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/contributors_scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingStart="@dimen/contributors_screen_padding_horizontal"
+        android:paddingTop="@dimen/contributors_screen_padding_vertical"
+        android:paddingEnd="@dimen/contributors_screen_padding_horizontal"
+        android:paddingBottom="@dimen/contributors_screen_padding_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/contributors_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/page_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/contributors_page_title"
+                android:textColor="@color/white"
+                android:textSize="@dimen/contributors_heading_text_size"
+                tools:text="贡献者" />
+
+            <LinearLayout
+                android:id="@+id/coreContributorsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/contributors_card_margin_top"
+                android:orientation="vertical" />
+
+            <TextView
+                android:id="@+id/art_team_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/contributors_subsection_margin_top"
+                android:text="@string/contributors_art_team_title"
+                android:textColor="@color/about_secondary_text"
+                android:textSize="@dimen/contributors_section_title_text_size"
+                android:fontFamily="sans-serif-medium"
+                tools:text="设计团队" />
+
+            <TextView
+                android:id="@+id/art_team_members"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/contributors_art_team_members"
+                android:textColor="@color/about_secondary_text"
+                android:textSize="@dimen/contributors_body_text_size"
+                android:fontFamily="sans-serif"
+                tools:text="名单" />
+
+            <LinearLayout
+                android:id="@+id/footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/contributors_subsection_margin_top"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/contributors_footer_padding">
+
+                <ImageView
+                    android:id="@+id/footerLogo"
+                    android:layout_width="@dimen/contributors_footer_logo_size"
+                    android:layout_height="@dimen/contributors_footer_logo_size"
+                    android:contentDescription="@string/contributors_footer_logo_desc"
+                    android:src="@drawable/ic_haodustudio_logo"
+                    android:scaleType="centerInside" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contributors_avatar_text_margin_start"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/footerAttribution"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/contributors_footer_attribution"
+                        android:textColor="@color/about_secondary_text"
+                        android:textSize="@dimen/contributors_footer_text_size"
+                        android:fontFamily="sans-serif"
+                        tools:text="本软件部分图标来源于 MUI / TDesign Icon" />
+
+                    <TextView
+                        android:id="@+id/footerCopyright"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/about_secondary_text"
+                        android:textSize="@dimen/contributors_footer_text_size"
+                        android:fontFamily="sans-serif"
+                        tools:text="©HaoduStudio 2021 - 2025" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
