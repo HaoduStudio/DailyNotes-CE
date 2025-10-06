@@ -10,9 +10,15 @@
     <dimen name="contributors_card_margin_top">6dp</dimen>
     <dimen name="contributors_section_margin_top">12dp</dimen>
     <dimen name="contributors_subsection_margin_top">14dp</dimen>
+    <dimen name="contributors_list_margin_top">6dp</dimen>
     <dimen name="contributors_avatar_size">36dp</dimen>
     <dimen name="contributors_avatar_text_margin_start">10dp</dimen>
-    <dimen name="contributors_footer_logo_size">32dp</dimen>
-    <dimen name="contributors_footer_padding">10dp</dimen>
-    <dimen name="contributors_footer_text_size">6sp</dimen>
+    <dimen name="contributors_oss_avatar_size">32dp</dimen>
+    <dimen name="contributors_oss_item_padding">5dp</dimen>
+    <dimen name="contributors_footer_logo_size">28dp</dimen>
+    <dimen name="contributors_footer_padding">8dp</dimen>
+    <dimen name="contributors_footer_text_size">7sp</dimen>
+    <dimen name="contributors_open_source_title_text_size">10sp</dimen>
+    <dimen name="contributors_progress_margin_top">8dp</dimen>
+    <dimen name="contributors_progress_indicator_size">24dp</dimen>
 </resources>
