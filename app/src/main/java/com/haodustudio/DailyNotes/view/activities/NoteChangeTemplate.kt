@@ -11,7 +11,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.R
 import com.haodustudio.DailyNotes.databinding.ActivityNoteChangeTemplateBinding
+import com.haodustudio.DailyNotes.helper.PrivacySettingsManager
 import com.haodustudio.DailyNotes.helper.makeToast
 import com.haodustudio.DailyNotes.helper.toGson
 import com.haodustudio.DailyNotes.model.listener.ChangeNoteDataCallBack
@@ -54,12 +56,15 @@ class NoteChangeTemplate : BaseActivity(), View.OnClickListener {
             addTmpView(false, id)
         }
 
-        makeToast("获取在线模版")
-        val call = NetworkRepository.getTemplateListCall()
-        if (call == null) {
-            makeToast("无网络连接")
+        if (!PrivacySettingsManager.isCloudResourcesEnabled()) {
+            makeToast(getString(R.string.privacy_cloud_disabled_hint))
         } else {
-            call.enqueue(object: Callback<TemplateList> {
+            makeToast("获取在线模版")
+            val call = NetworkRepository.getTemplateListCall()
+            if (call == null) {
+                makeToast("无网络连接")
+            } else {
+                call.enqueue(object: Callback<TemplateList> {
             override fun onResponse(call: Call<TemplateList>, response: Response<TemplateList>) {
                 try {
                     FileUtils.makeRootDirectory(BaseApplication.TEMPLATE_DOWNLOAD_FROM_URI_PATH)
@@ -99,7 +104,8 @@ class NoteChangeTemplate : BaseActivity(), View.OnClickListener {
                 makeToast("无网络连接")
             }
 
-            })
+                })
+            }
         }
     }
 

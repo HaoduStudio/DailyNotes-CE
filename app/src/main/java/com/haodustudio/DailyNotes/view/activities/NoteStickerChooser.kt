@@ -8,7 +8,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.R
 import com.haodustudio.DailyNotes.databinding.ActivityNoteStickerChooserBinding
+import com.haodustudio.DailyNotes.helper.PrivacySettingsManager
 import com.haodustudio.DailyNotes.helper.makeToast
 import com.haodustudio.DailyNotes.model.models.StickerList
 import com.haodustudio.DailyNotes.utils.FileUtils
@@ -47,12 +49,15 @@ class NoteStickerChooser : BaseActivity(noShot = true) {
                 adapter = stickerAdapter
             }
 
-            makeToast("加载在线贴纸")
-            val call = NetworkRepository.getStickerListCall()
-            if (call == null) {
-                makeToast("无网络连接")
+            if (!PrivacySettingsManager.isCloudResourcesEnabled()) {
+                makeToast(getString(R.string.privacy_cloud_disabled_hint))
             } else {
-                call.enqueue(object : Callback<StickerList> {
+                makeToast("加载在线贴纸")
+                val call = NetworkRepository.getStickerListCall()
+                if (call == null) {
+                    makeToast("无网络连接")
+                } else {
+                    call.enqueue(object : Callback<StickerList> {
                 override fun onResponse(call: Call<StickerList>, response: Response<StickerList>) {
                     try {
                         response.body().let {
@@ -90,7 +95,8 @@ class NoteStickerChooser : BaseActivity(noShot = true) {
                     makeToast("无网络连接")
                 }
 
-                })
+                    })
+                }
             }
         }catch (e: Exception) {
             e.printStackTrace()

@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.R
 import com.haodustudio.DailyNotes.databinding.ActivityGuideBinding
+import com.haodustudio.DailyNotes.helper.PrivacySettingsManager
 import com.haodustudio.DailyNotes.helper.makeToast
 import com.haodustudio.DailyNotes.model.models.GuideImgList
 import com.haodustudio.DailyNotes.utils.NetworkUtils
@@ -27,6 +28,12 @@ class GuideActivity : BaseActivity() {
         setContentView(binding.root)
 
         Glide.with(this).load(R.drawable.ic_cute_loading).into(binding.progressBar)
+
+        if (!PrivacySettingsManager.isCloudResourcesEnabled()) {
+            makeToast(getString(R.string.privacy_cloud_disabled_hint))
+            finish()
+            return
+        }
 
         NetworkUtils.isNetworkOnline(object : Handler() {
             override fun handleMessage(msg: Message) {
