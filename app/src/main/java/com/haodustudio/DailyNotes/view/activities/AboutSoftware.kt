@@ -9,8 +9,9 @@ import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.R
 import com.haodustudio.DailyNotes.databinding.ActivityAboutSoftwareBinding
 import com.haodustudio.DailyNotes.helper.makeToast
-import com.haodustudio.DailyNotes.view.activities.ViewImage
 import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
+import com.haodustudio.DailyNotes.view.activities.ViewImage
+import com.haodustudio.DailyNotes.view.activities.PrivacySettingsActivity
 
 class AboutSoftware : BaseActivity() {
     private val binding by lazy { ActivityAboutSoftwareBinding.inflate(layoutInflater) }
@@ -90,7 +91,7 @@ class AboutSoftware : BaseActivity() {
             icon.setImageResource(R.drawable.ic_about_privacy)
             root.contentDescription = getString(R.string.about_section_privacy_desc)
             root.setOnClickListener {
-                makeToast(getString(R.string.about_feature_placeholder))
+                startActivity(Intent(this@AboutSoftware, PrivacySettingsActivity::class.java))
             }
         }
     }

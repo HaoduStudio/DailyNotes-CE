@@ -7,7 +7,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.haodustudio.DailyNotes.BaseApplication
+import com.haodustudio.DailyNotes.R
 import com.haodustudio.DailyNotes.applicationScope
+import com.haodustudio.DailyNotes.helper.PrivacySettingsManager
 import com.haodustudio.DailyNotes.helper.makeToast
 import com.haodustudio.DailyNotes.model.listener.AddNoteCallBack
 import com.haodustudio.DailyNotes.model.listener.ChangeNoteDataCallBack
@@ -34,7 +36,7 @@ class GlobalViewModel : ViewModel() {
 
     init {
         appBackgroundPath.value = getAppBackgroundPath()
-        if (appConfigPre.getBoolean("app_background_is_weather", false)) {
+        if (appConfigPre.getBoolean("app_background_is_weather", false) && PrivacySettingsManager.isLocationEnabled()) {
             updateWeather(true)
         }
     }
@@ -110,6 +112,10 @@ class GlobalViewModel : ViewModel() {
     }
 
     fun setAppBackground(isWeather: Boolean, path: String) {
+        if (isWeather && !PrivacySettingsManager.isLocationEnabled()) {
+            makeToast(BaseApplication.instance.getString(R.string.privacy_location_disabled_hint))
+            return
+        }
         appConfigPre.edit {
             putBoolean("app_background_is_weather", isWeather)
             putString("app_background_path", path)
@@ -128,6 +134,9 @@ class GlobalViewModel : ViewModel() {
     }
 
     private fun updateWeather(fromCache: Boolean = false) {
+        if (!PrivacySettingsManager.isLocationEnabled()) {
+            return
+        }
         if (System.currentTimeMillis() - appConfigPre.getLong("app_background_set_time", Long.MAX_VALUE) >= BaseApplication.WEATHER_REFRESH_TIME || !fromCache) {
             // refresh and post change
             val call = NetworkRepository.getWeatherCall()

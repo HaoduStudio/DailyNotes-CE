@@ -13,8 +13,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import com.haodustudio.DailyNotes.helper.PrivacySettingsManager
 import com.haodustudio.DailyNotes.utils.BitmapUtils
 import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
+import io.sentry.Sentry
+import io.sentry.android.core.SentryAndroid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,6 +31,8 @@ class BaseApplication : Application(), ViewModelStoreOwner {
     private val appViewModelStore by lazy { ViewModelStore() }
     override val viewModelStore: ViewModelStore
         get() = appViewModelStore
+
+    private var sentryInitialized = false
 
     companion object {
         lateinit var instance: BaseApplication
@@ -135,6 +140,27 @@ class BaseApplication : Application(), ViewModelStoreOwner {
         NOTES_PATH = filesDir.absolutePath + "/notes/"
         TEMPLATE_DOWNLOAD_FROM_URI_PATH = filesDir.absolutePath + "/uri_template/"
         BACKGROUND_DOWNLOAD_FROM_URI_PATH = filesDir.absolutePath + "/uri_background/"
+
+        updateSentryState(PrivacySettingsManager.isCrashReportingEnabled())
+    }
+
+    fun updateSentryState(enabled: Boolean) {
+        if (enabled) {
+            if (!sentryInitialized) {
+                runCatching {
+                    SentryAndroid.init(this)
+                }.onSuccess {
+                    sentryInitialized = true
+                }.onFailure {
+                    sentryInitialized = false
+                }
+            }
+        } else {
+            if (sentryInitialized) {
+                Sentry.close()
+                sentryInitialized = false
+            }
+        }
     }
 
     override fun onTerminate() {
