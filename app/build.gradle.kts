@@ -68,6 +68,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.6.2")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.google.android.material:material:1.11.0")
+    implementation("io.sentry:sentry-android:7.13.0")
 }
 
 sentry {

@@ -32,6 +32,31 @@
     <string name="about_network_unavailable">无网络连接</string>
     <string name="about_feature_placeholder">敬请期待</string>
 
+    <string name="privacy_action_back">返回</string>
+    <string name="privacy_screen_title">隐私设置</string>
+    <string name="privacy_banner_content_desc">隐私设置宣传图</string>
+    <string name="privacy_banner_title">PRIVACY</string>
+    <string name="privacy_banner_description">我们十分重视用户的个人数据安全和隐私保护，因此我们提供了下列设置选项：</string>
+    <string name="privacy_crash_title">崩溃数据上报</string>
+    <string name="privacy_crash_description">启用该选项后若程序崩溃将自动上报数据到Sentry</string>
+    <string name="privacy_location_title">位置信息</string>
+    <string name="privacy_location_description">启用该选项后将允许上报位置信息以使用天气功能</string>
+    <string name="privacy_cloud_title">云端资源获取</string>
+    <string name="privacy_cloud_description">启用该选项后将允许从服务器获取在线资源</string>
+    <string name="privacy_weather_option_label">随天气变化</string>
+    <string name="privacy_background_option_label">背景 %1$d</string>
+    <string name="privacy_background_online_label">在线背景</string>
+    <string name="privacy_confirm_title">是否确认更新此项设置？</string>
+    <string name="privacy_confirm_message">更新后设置将在重启后立即生效</string>
+    <string name="privacy_confirm_cancel">取消</string>
+    <string name="privacy_confirm_confirm">确定</string>
+    <string name="privacy_confirm_enable">将启用“%1$s”</string>
+    <string name="privacy_confirm_disable">将关闭“%1$s”</string>
+    <string name="privacy_state_enabled">已启用</string>
+    <string name="privacy_state_disabled">已关闭</string>
+    <string name="privacy_location_disabled_hint">已关闭位置信息，无法使用随天气变化背景</string>
+    <string name="privacy_cloud_disabled_hint">已关闭云端资源获取</string>
+
     <string name="contributors_page_title">贡献者</string>
     <string name="contributors_core_section_title">核心开发成员</string>
     <string name="contributors_core_role_major">大版本开发者</string>

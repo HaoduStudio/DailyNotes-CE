@@ -42,6 +42,9 @@
             android:name=".view.activities.AboutSoftware"
             android:exported="false" />
         <activity
+            android:name=".view.activities.PrivacySettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.activities.ShowFindResult"
             android:exported="false" />
         <activity
