@@ -8,15 +8,15 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_privacy_dialog_container"
-    android:minWidth="260dp"
-    android:maxWidth="300dp"
+    android:minWidth="220dp"
+    android:maxWidth="260dp"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/privacyDialogIcon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/ic_privacy_dialog_user"
         android:contentDescription="@string/privacy_confirm_title" />
@@ -25,12 +25,12 @@
         android:id="@+id/privacyDialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:gravity="center"
         android:text="@string/privacy_confirm_title"
         android:textColor="@color/white"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-medium" />
 
     <TextView
         android:id="@+id/privacyDialogMessage"
@@ -40,13 +40,13 @@
         android:gravity="center"
         android:text="@string/privacy_confirm_message"
         android:textColor="@color/about_secondary_text"
-        android:textSize="12sp"
-        android:lineSpacingExtra="2dp" />
+        android:textSize="10sp"
+        android:lineSpacingExtra="1dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:weightSum="2">
@@ -62,20 +62,20 @@
             android:paddingEnd="4dp">
 
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:background="@drawable/bg_privacy_dialog_button_cancel"
                 android:contentDescription="@string/privacy_confirm_cancel"
-                android:padding="18dp"
+                android:padding="14dp"
                 android:src="@drawable/privacy_dialog_close" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:text="@string/privacy_confirm_cancel"
                 android:textColor="@color/about_secondary_text"
-                android:textSize="11sp" />
+                android:textSize="10sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -89,20 +89,20 @@
             android:paddingEnd="4dp">
 
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:background="@drawable/bg_privacy_dialog_button_confirm"
                 android:contentDescription="@string/privacy_confirm_confirm"
-                android:padding="18dp"
+                android:padding="14dp"
                 android:src="@drawable/privacy_dialog_yes" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:text="@string/privacy_confirm_confirm"
                 android:textColor="@color/white"
-                android:textSize="11sp" />
+                android:textSize="10sp" />
         </LinearLayout>
     </LinearLayout>
 
