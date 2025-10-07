@@ -37,10 +37,6 @@ import com.haodustudio.DailyNotes.view.customView.freeLayout.objects.BitmapObjec
 import com.haodustudio.DailyNotes.view.customView.freeLayout.objects.TextObject
 import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
 import com.permissionx.guolindev.PermissionX
-import com.xtc.shareapi.share.communication.SendMessageToXTC
-import com.xtc.shareapi.share.manager.ShareMessageManager
-import com.xtc.shareapi.share.shareobject.XTCImageObject
-import com.xtc.shareapi.share.shareobject.XTCShareMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -106,7 +102,6 @@ class FreeMakeNote : DialogActivity(noShot = true, canDis = true) {
     private fun handleIntentExtras() {
         noteId = intent.getLongExtra("noteId", -1L)
         isEditMode = intent.getBooleanExtra("editMode", false)
-        val shareMode = intent.getBooleanExtra("share", false)
 
         setTheme(if (isEditMode) R.style.DialogActivityTheme else R.style.DialogActivityTheme2)
 
@@ -114,15 +109,6 @@ class FreeMakeNote : DialogActivity(noShot = true, canDis = true) {
             makeToast("Empty id")
             finish()
             return
-        }
-
-        if (shareMode) {
-            appViewModel.getNoteFromIdLiveData(noteId).observe(this) {
-                if (it != null && this.note == null) {
-                    this.note = it
-                    loadNoteContent(it, shareAfterLoad = true)
-                }
-            }
         }
     }
 
@@ -144,16 +130,13 @@ class FreeMakeNote : DialogActivity(noShot = true, canDis = true) {
         }
     }
 
-    private fun loadNoteContent(noteToLoad: Note, shareAfterLoad: Boolean = false) {
+    private fun loadNoteContent(noteToLoad: Note) {
         try {
             loadFreeObjects(noteToLoad.data["noteFolder"])
             binding.freeLayout.addPaper(noteToLoad.data["pageSize"]?.toInt() ?: 0)
             currentBackgroundColorId = noteToLoad.data["backgroundColor"]?.toInt() ?: 12
             val colorRes = BaseApplication.idToTextColor[currentBackgroundColorId] ?: R.color.white
             binding.backgroundColorRoot.setBackgroundColor(ContextCompat.getColor(this, colorRes))
-            if (shareAfterLoad) {
-                shareNoteAsImage()
-            }
         } catch (e: Exception) {
             e.printStackTrace()
             makeToast("加载失败")
@@ -401,22 +384,5 @@ class FreeMakeNote : DialogActivity(noShot = true, canDis = true) {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }
-
-    private fun shareNoteAsImage() {
-        binding.viewToShot.postDelayed({
-            try {
-                val shareImage = BitmapUtils.viewConversionBitmap(binding.viewToShot)
-                val xtcImageObject = XTCImageObject().apply { setBitmap(shareImage) }
-                val xtcShareMessage = XTCShareMessage().apply { shareObject = xtcImageObject }
-                val request = SendMessageToXTC.Request().apply {
-                    message = xtcShareMessage
-                    flag = 1
-                }
-                ShareMessageManager(this).sendRequestToXTC(request, BaseApplication.APP_ID)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }, 800)
     }
 }

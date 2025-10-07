@@ -25,10 +25,6 @@ import com.haodustudio.DailyNotes.view.adapters.FixLinearLayoutManager
 import com.haodustudio.DailyNotes.view.adapters.ImageAdapter
 import com.haodustudio.DailyNotes.view.adapters.RecordAdapter
 import com.haodustudio.DailyNotes.viewModel.viewModels.GlobalViewModel
-import com.xtc.shareapi.share.communication.SendMessageToXTC
-import com.xtc.shareapi.share.manager.ShareMessageManager
-import com.xtc.shareapi.share.shareobject.XTCImageObject
-import com.xtc.shareapi.share.shareobject.XTCShareMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -76,7 +72,6 @@ class NoteViewer : BaseActivity() {
         binding.stickerLayout.setCanEdit(false)
 
         val noteId = intent.getLongExtra("noteId", -1L)
-        val shareMode = intent.getBooleanExtra("share", false)
         isEditing = intent.getBooleanExtra("editMode", false)
 
         if (noteId == -1L) {
@@ -87,13 +82,13 @@ class NoteViewer : BaseActivity() {
 
         appViewModel.getNoteFromIdLiveData(noteId).observe(this) { updatedNote ->
             noteData = updatedNote
-            updateUI(updatedNote, shareMode)
+            updateUI(updatedNote)
         }
 
         setupListeners()
     }
 
-    private fun updateUI(note: Note, shareMode: Boolean) {
+    private fun updateUI(note: Note) {
         try {
             updateTittle(note.yy, note.mm, note.dd)
             updateMood(note.mood)
@@ -103,12 +98,6 @@ class NoteViewer : BaseActivity() {
             updateImage(note.data["imagePaths"]!!.toArray(), note.data["videoPaths"]!!.toArray())
             updateRecord(note.data["recordPaths"]!!.toArray())
             loadSticker(note)
-
-            if (shareMode) {
-                imageAdapter.setOnAllDoneListener {
-                    shotToShare()
-                }
-            }
         } catch (e: Exception) {
             makeToast("Failed to load note data")
             e.printStackTrace()
@@ -260,22 +249,4 @@ class NoteViewer : BaseActivity() {
         }
     }
 
-    private fun shotToShare() {
-        lifecycleScope.launch {
-            delay(800)
-            try {
-                val shareImage = BitmapUtils.viewConversionBitmap(binding.viewForShot)
-                val xtcImageObject = XTCImageObject().apply { setBitmap(shareImage) }
-                val xtcShareMessage = XTCShareMessage().apply { shareObject = xtcImageObject }
-                val request = SendMessageToXTC.Request().apply {
-                    message = xtcShareMessage
-                    flag = 1
-                }
-                ShareMessageManager(this@NoteViewer).sendRequestToXTC(request, BaseApplication.APP_ID)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                withContext(Dispatchers.Main) { makeToast("分享失败") }
-            }
-        }
-    }
 }

@@ -67,22 +67,5 @@ class NoteOption : DialogActivity(noShot = true) {
             startActivity(mIntent)
             finish()
         }
-
-        binding.share.setOnClickListener {
-            val mIntent: Intent = when (type) {
-                NOTE_TYPE_V1 -> {
-                    Intent(this, NoteViewer::class.java)
-                }
-                else -> {
-                    Intent(this, FreeMakeNote::class.java).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                    }
-                }
-            }
-            mIntent.putExtra("noteId", noteId)
-            mIntent.putExtra("share", true)
-            startActivity(mIntent)
-            finish()
-        }
     }
 }

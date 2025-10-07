@@ -25,23 +25,6 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/share"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="10dp"
-        app:cardCornerRadius="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_note_opt_share" />
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
         android:id="@+id/delete"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -86,18 +69,6 @@
         app:layout_constraintEnd_toEndOf="@+id/edit"
         app:layout_constraintStart_toStartOf="@+id/edit"
         app:layout_constraintTop_toBottomOf="@+id/edit" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:text="分享"
-        android:textColor="#FFF"
-        android:textSize="12dp"
-        app:layout_constraintEnd_toEndOf="@+id/share"
-        app:layout_constraintStart_toStartOf="@+id/share"
-        app:layout_constraintTop_toBottomOf="@+id/share" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -25,7 +25,6 @@ import com.haodustudio.DailyNotes.databinding.ActivityViewImageBinding
 import com.haodustudio.DailyNotes.helper.makeToast
 import com.haodustudio.DailyNotes.utils.BitmapUtils
 import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
-import com.xtc.shareapi.share.utils.BitmapUtil.getScreenWidth
 
 
 class ViewImage : BaseActivity() {
