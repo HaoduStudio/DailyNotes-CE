@@ -66,7 +66,8 @@
                 android:layout_height="48dp"
                 android:background="@drawable/bg_privacy_dialog_button_cancel"
                 android:contentDescription="@string/privacy_confirm_cancel"
-                android:padding="14dp"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
                 android:src="@drawable/privacy_dialog_close" />
 
             <TextView
@@ -93,7 +94,8 @@
                 android:layout_height="48dp"
                 android:background="@drawable/bg_privacy_dialog_button_confirm"
                 android:contentDescription="@string/privacy_confirm_confirm"
-                android:padding="14dp"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
                 android:src="@drawable/privacy_dialog_yes" />
 
             <TextView
