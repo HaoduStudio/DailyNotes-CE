@@ -12,6 +12,7 @@ import com.haodustudio.DailyNotes.R
 import com.haodustudio.DailyNotes.databinding.ActivityPrivacySettingsBinding
 import com.haodustudio.DailyNotes.helper.PrivacySettingsManager
 import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.utils.BitmapUtils
 import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
 
 class PrivacySettingsActivity : BaseActivity() {
@@ -22,8 +23,30 @@ class PrivacySettingsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        loadBannerImageSafely()
         setupListeners()
         refreshIndicators()
+    }
+
+    private fun loadBannerImageSafely() {
+        try {
+            binding.privacyBannerImage.post {
+                val viewWidth = binding.privacyBannerImage.width
+                val viewHeight = binding.privacyBannerImage.height
+                
+                val bitmap = BitmapUtils.decodeSampledBitmapFromResource(
+                    R.drawable.privacy_banner,
+                    viewWidth,
+                    viewHeight
+                )
+                
+                bitmap?.let {
+                    binding.privacyBannerImage.setImageBitmap(it)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun setupListeners() {

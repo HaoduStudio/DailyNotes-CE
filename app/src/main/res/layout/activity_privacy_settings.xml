@@ -56,8 +56,7 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/privacy_banner_content_desc"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/privacy_banner" />
+                    android:scaleType="centerCrop" />
 
             </com.google.android.material.card.MaterialCardView>
 

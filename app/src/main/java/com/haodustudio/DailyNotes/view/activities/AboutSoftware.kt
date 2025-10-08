@@ -9,6 +9,7 @@ import com.haodustudio.DailyNotes.BaseApplication
 import com.haodustudio.DailyNotes.R
 import com.haodustudio.DailyNotes.databinding.ActivityAboutSoftwareBinding
 import com.haodustudio.DailyNotes.helper.makeToast
+import com.haodustudio.DailyNotes.utils.BitmapUtils
 import com.haodustudio.DailyNotes.view.activities.base.BaseActivity
 import com.haodustudio.DailyNotes.view.activities.ViewImage
 import com.haodustudio.DailyNotes.view.activities.PrivacySettingsActivity
@@ -20,8 +21,34 @@ class AboutSoftware : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        loadBannerImageSafely()
         configureBanner()
         configureCards()
+    }
+
+    private fun loadBannerImageSafely() {
+        try {
+            binding.bannerImage.post {
+                val viewWidth = binding.bannerImage.width
+                val viewHeight = binding.bannerImage.height
+                
+                val bitmap = BitmapUtils.decodeSampledBitmapFromResource(
+                    R.drawable.about_banner,
+                    viewWidth,
+                    viewHeight
+                )
+                
+                if (bitmap != null) {
+                    binding.bannerImage.setImageBitmap(bitmap)
+                } else {
+                    // 如果加载失败,使用占位符
+                    binding.bannerImage.setImageResource(android.R.color.darker_gray)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            binding.bannerImage.setImageResource(android.R.color.darker_gray)
+        }
     }
 
     private fun configureBanner() {

@@ -62,7 +62,6 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/about_banner_content_description"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/about_banner"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
