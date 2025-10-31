@@ -25,7 +25,7 @@ DailyNotes CE 最新版本支持以下语言：
 
 - **简体中文 (zh_Hans)** [![翻译状态](http://translate.nexaorion.cn/widget/dailynotes-ce/app/zh_Hans/svg-badge.svg)](http://translate.nexaorion.cn/engage/dailynotes-ce/)
 - **繁体中文 (zh_Hant)** [![翻译状态](http://translate.nexaorion.cn/widget/dailynotes-ce/app/zh_Hant/svg-badge.svg)](http://translate.nexaorion.cn/engage/dailynotes-ce/)
-- **英文美国 (en_US)** [![翻译状态](http://translate.nexaorion.cn/widget/dailynotes-ce/app/en_US/svg-badge.svg)](http://translate.nexaorion.cn/engage/dailynotes-ce/)
+- **英文 (en)** [![翻译状态](http://translate.nexaorion.cn/widget/dailynotes-ce/app/en/svg-badge.svg)](http://translate.nexaorion.cn/engage/dailynotes-ce/)
 
 您可以在 [Nexaorion Translate Platform](https://translate.nexaorion.cn/engage/dailynotes-ce/) 参与翻译贡献工作。
 
