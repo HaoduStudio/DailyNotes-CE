@@ -19,6 +19,16 @@ DailyNotes CE 是基于 DailyNotes V3 大版本开源代码二次修改的社区
 
 *社区版由 HaoduStudio 独立开发和运营，与小天才无任何关联。*
 
+## 多语言 / i18n
+
+DailyNotes CE 最新版本支持以下语言：
+
+- **简体中文 (zh_Hans)** [![翻译状态](http://translate.nexaorion.cn/widget/dailynotes-ce/app/zh_Hans/svg-badge.svg)](http://translate.nexaorion.cn/engage/dailynotes-ce/)
+- **繁体中文 (zh_Hant)** [![翻译状态](http://translate.nexaorion.cn/widget/dailynotes-ce/app/zh_Hant/svg-badge.svg)](http://translate.nexaorion.cn/engage/dailynotes-ce/)
+- **英文美国 (en_US)** [![翻译状态](http://translate.nexaorion.cn/widget/dailynotes-ce/app/en_US/svg-badge.svg)](http://translate.nexaorion.cn/engage/dailynotes-ce/)
+
+您可以在 [Nexaorion Translate Platform](https://translate.nexaorion.cn/engage/dailynotes-ce/) 参与翻译贡献工作。
+
 ## LICENSE
 
 - `DailyNotes-V3` 原版仓库使用 [Apache License 2.0](https://github.com/HaoduStudio/DailyNotes-V3/blob/master/LICENSE) 开源许可证
