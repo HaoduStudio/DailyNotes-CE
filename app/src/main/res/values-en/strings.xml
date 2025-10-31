@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DailyNotes</string>
+    <string name="menu">Menu</string>
+    <string name="write_note">Write a note</string>
+    <string name="mood_calendar">Mood Calendar</string>
+    <string name="search">Search</string>
 </resources>
