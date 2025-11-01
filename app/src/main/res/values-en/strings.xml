@@ -37,7 +37,7 @@
     <string name="privacy_banner_title">PRIVACY</string>
     <string name="privacy_banner_description">We place great importance on the security of users\' personal data and the protection of their privacy. So, we provide the following settings options:</string>
     <string name="privacy_crash_title">Automatically report crash data</string>
-    <string name="privacy_crash_description">Enabling this option will automatically report data to Sentry if the program crashes</string>
+    <string name="privacy_crash_description">Enabling this option will automatically report data to Sentry if the program crashes.</string>
     <string name="privacy_location_title">Location information</string>
     <string name="privacy_location_description">Enabling this option will allow location information to be reported for use with weather features</string>
     <string name="privacy_cloud_title">Access online resources</string>
@@ -50,4 +50,24 @@
     <string name="privacy_confirm_cancel">Cancel</string>
     <string name="privacy_confirm_confirm">Yes</string>
     <string name="privacy_confirm_enable">\"%1$s\" will be enabled</string>
+    <string name="privacy_confirm_disable">“%1$s” will be closed</string>
+    <string name="privacy_state_enabled">Enabled</string>
+    <string name="privacy_state_disabled">Closed</string>
+    <string name="privacy_location_disabled_hint">Location information is disabled, Weather Background cannot be used</string>
+    <string name="privacy_cloud_disabled_hint">Cloud Resource Fetching Disabled</string>
+    <string name="contributors_page_title">Contributors</string>
+    <string name="contributors_core_section_title">Core Contributors</string>
+    <string name="contributors_core_role_major">Major Contributors</string>
+    <string name="contributors_core_role_ce_lead">CE Core Contributors</string>
+    <string name="contributors_art_team_title">Special thanks to the artists on the Art Team~</string>
+    <string name="contributors_footer_logo_desc">HaoduStudio Logo</string>
+    <string name="contributors_footer_attribution">This software uses some icons from MUI / TDesign Icon</string>
+    <string name="contributors_footer_copyright">©HaoduStudio 2021 - %1$d</string>
+    <string name="contributors_art_team_members">卡比、许祁颢、DonG、侍冰、Wick、婉静自然、Oroxi、老瑜、苏柒、二贰猫</string>
+    <string name="please_write_one_note_at_least">Please write at least one note</string>
+    <string name="update_complete">Update Complete</string>
+    <string name="updating_please_wait">Updating... \nPlease do not close the app during the update!</string>
+    <string name="migration_successful">Successfully Migrated %1$s</string>
+    <string name="migration_failure">Failed to Migrate %1$s</string>
+    <string name="done">Finish</string>
 </resources>
