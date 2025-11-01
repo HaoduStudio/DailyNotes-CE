@@ -37,7 +37,7 @@
     <string name="privacy_banner_title">PRIVACY</string>
     <string name="privacy_banner_description">We place great importance on the security of users\' personal data and the protection of their privacy. So, we provide the following settings options:</string>
     <string name="privacy_crash_title">Automatically report crash data</string>
-    <string name="privacy_crash_description">Enabling this option will automatically report data to Sentry if the program crashes.</string>
+    <string name="privacy_crash_description">Enabling this option will automatically report data to Sentry if the program crashes</string>
     <string name="privacy_location_title">Location information</string>
     <string name="privacy_location_description">Enabling this option will allow location information to be reported for use with weather features</string>
     <string name="privacy_cloud_title">Access online resources</string>
@@ -50,9 +50,9 @@
     <string name="privacy_confirm_cancel">Cancel</string>
     <string name="privacy_confirm_confirm">Yes</string>
     <string name="privacy_confirm_enable">\"%1$s\" will be enabled</string>
-    <string name="privacy_confirm_disable">“%1$s” will be closed</string>
+    <string name="privacy_confirm_disable">\"%1$s\" will be closed</string>
     <string name="privacy_state_enabled">Enabled</string>
-    <string name="privacy_state_disabled">Closed</string>
+    <string name="privacy_state_disabled">Disabled</string>
     <string name="privacy_location_disabled_hint">Location information is disabled, Weather Background cannot be used</string>
     <string name="privacy_cloud_disabled_hint">Cloud Resource Fetching Disabled</string>
     <string name="contributors_page_title">Contributors</string>
@@ -70,4 +70,5 @@
     <string name="migration_successful">Successfully Migrated %1$s</string>
     <string name="migration_failure">Failed to Migrate %1$s</string>
     <string name="done">Finish</string>
+    <string name="contributors_core_role_support">Super MTF</string>
 </resources>
